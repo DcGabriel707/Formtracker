@@ -1,0 +1,15 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="cardView_padding">8dp</dimen>
+    <dimen name="entry_card_name_size">18sp</dimen>
+    <dimen name="entry_card_deadline_textsize">14sp</dimen>
+    <dimen name="cardview_default_elevation">2dp</dimen> <!-- elevation for every major cardview-->
+    <dimen name="smallerCardCornerRadius">16dp</dimen>
+    <dimen name="defaultTextViewMargin">8dp</dimen>
+    <dimen name="cardview_elevation">2dp</dimen>
+    <dimen name="cardview_elevation_clicked">4dp</dimen>
+    <dimen name="marginLeftSpinnerTitle">4dp</dimen>
+    <dimen name="textSizeSpinnerTitle">14sp</dimen>
+    <dimen name="entryDetailCardCornerRadius">16dp</dimen>
+    <dimen name="tabLayoutHeight">50dp</dimen>
+</resources>

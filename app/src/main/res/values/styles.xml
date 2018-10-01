@@ -1,0 +1,102 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <!-- default and theme for scholarhsip tab. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+    </style>
+
+    <!--Theme for College Tab. Changes primary color-->
+    <style name="CollegeTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#e53935</item>
+        <item name="colorPrimaryDark">#e53935</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!--Theme for Employment Tab. Changes primary color-->
+    <style name="EmploymentTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#651fff</item>
+        <item name="colorPrimaryDark">#651fff</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!--Theme for Employment Tab. Changes primary color-->
+    <style name="OthersTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#f57f17</item>
+        <item name="colorPrimaryDark">#f57f17</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+
+    <style name="SplashscreenTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/bg_splashscreen</item> <!--USED FOR SPLASHSCREEN-->
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="addEntryTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#1e88e5</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="addEntryEditText">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#448aff</item>
+        <item name="android:backgroundTint">#f5f5f5</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+    </style>
+
+    <style name="addEntryCardView">
+        <item name="cardUseCompatPadding">true</item>
+        <item name="cardCornerRadius">6dp</item>
+        <item name="cardElevation">@dimen/cardview_default_elevation</item>
+        <item name="android:padding">20dp</item>
+        <item name="android:layout_margin">8dp</item>
+    </style>
+
+    <style name="addEntryEditTextCard">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:backgroundTint">#f5f5f5</item>
+        <item name="android:foregroundGravity">center</item>
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardUseCompatPadding">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:stateListAnimator">@animator/button_elevate</item>
+    </style>
+
+    <style name="outerLinearLayoutAddEntry">
+        <item name="android:layout_margin">16dp</item>
+    </style>
+
+    <style name="smallerCardViewInsideCardView">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="cardCornerRadius">@dimen/smallerCardCornerRadius</item>
+        <!--   <item name="android:stateListAnimator">@animator/button_elevate</item>  -->
+
+    </style>
+</resources>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".add_entry_employment">
+
+    <LinearLayout
+        style="@style/outerLinearLayoutAddEntry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/employment"
+            android:textSize="20sp" />
+
+        <android.support.v7.widget.CardView
+            style="@style/addEntryCardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                style="@style/outerLinearLayoutAddEntry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.CardView
+                    style="@style/addEntryEditTextCard">
+                <EditText
+                    style="@style/addEntryEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/job_title"
+                    android:inputType="textCapWords" />
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    style="@style/addEntryEditTextCard">
+                <EditText
+                    style="@style/addEntryEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/company"
+                    android:inputType="textCapWords" />
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    style="@style/addEntryEditTextCard">
+                <EditText
+                    style="@style/addEntryEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/job_type"
+                    android:inputType="textCapWords" />
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    style="@style/addEntryEditTextCard">
+                <EditText
+                    style="@style/addEntryEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/salary"
+                    android:inputType="numberDecimal" />
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    style="@style/addEntryEditTextCard">
+                <EditText
+                    style="@style/addEntryEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/job_post_date"
+                    android:inputType="datetime" />
+                </android.support.v7.widget.CardView>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/shared_lower_add_entry"
+            />
+    </LinearLayout>
+</ScrollView>

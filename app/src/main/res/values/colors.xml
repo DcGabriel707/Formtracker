@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#43A047</color>
+    <color name="colorPrimaryDark">#388e3c</color>
+    <color name="colorAccent">#536dfe</color>
+    <color name="secondaryTextColor">#ffffffff</color>
+    <color name="white">#ffffff</color>
+    <color name="colorTeal">#00BFA5</color>
+    <color name="scholarshipColor">#43A047</color>
+    <color name="collegeColor">#e53935</color>
+    <color name="employmentColor">#651fff</color>
+    <color name="othersColor">#f57f17</color>
+
+</resources>
