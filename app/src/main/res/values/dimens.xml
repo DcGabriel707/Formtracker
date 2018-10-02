@@ -1,5 +1,5 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="fab_margin">20dp</dimen>
     <dimen name="cardView_padding">8dp</dimen>
     <dimen name="entry_card_name_size">18sp</dimen>
     <dimen name="entry_card_deadline_textsize">14sp</dimen>

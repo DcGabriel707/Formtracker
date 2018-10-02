@@ -195,4 +195,7 @@ public class ScholarshipTabFragment extends Fragment implements RecyclerViewAdap
     //todo make the status CardView in the entry CardView a spinner. This would make it easier for users to update.
     //todo backgroundTint only works with 5.1+. Replace with app:backgroundTint?
     //todo if date is somehow empty, stop the app from crashing 9-26-18
+    //todo use bottom sheet for sorting. add icons
+    //todo use inline menu for sorting
+
 }
