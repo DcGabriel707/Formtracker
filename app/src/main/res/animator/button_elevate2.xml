@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--move to anim folder??-->
+<?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
@@ -6,22 +6,23 @@
         android:state_pressed="true"
         >
 
+
         <set>
             <objectAnimator
                 android:duration="@android:integer/config_shortAnimTime"
                 android:propertyName="translationZ"
-                android:valueTo="@dimen/cardview_elevation_clicked"
+                android:valueTo="1dp"
                 android:valueType="floatType" />
             <!--android:valueFrom="@dimen/cardview_elevation" -->
             <objectAnimator
                 android:duration="@android:integer/config_shortAnimTime"
                 android:propertyName="scaleX"
-                android:valueTo="1.05"
+                android:valueTo=".8"
                 android:valueType="floatType" />
             <objectAnimator
                 android:duration="@android:integer/config_shortAnimTime"
                 android:propertyName="scaleY"
-                android:valueTo="1.05"
+                android:valueTo=".8"
                 android:valueType="floatType" />
 
         </set>

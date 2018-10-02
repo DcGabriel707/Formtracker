@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         android:layout_marginBottom="32dp"
-        android:stateListAnimator="@animator/button_elevate"
+        android:stateListAnimator="@animator/button_elevate2"
         app:backgroundTint="@color/white"
         app:layout_anchor="@id/tabLayoutId"
         app:layout_anchorGravity="center|top"

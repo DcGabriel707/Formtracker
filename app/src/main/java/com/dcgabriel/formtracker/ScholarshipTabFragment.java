@@ -177,13 +177,26 @@ public class ScholarshipTabFragment extends Fragment implements RecyclerViewAdap
     }
 
     @Override
-    public void sortButton() {
+    public void sortButton(final int sortType) {
         //sort by name
+
         Collections.sort(formsArrayList, new Comparator<Forms>() {
             @Override
             public int compare(Forms o1, Forms o2) {
                 Log.d(TAG, "compare: ***************");
-                return o1.getName().compareToIgnoreCase(o2.getName());
+                if (sortType == MainActivity.ManageFragmentFromActivity.SORT_NAME) {
+                    Log.d(TAG, "compare: Name***********");
+                    return o1.getName().compareToIgnoreCase(o2.getName());
+                } else if (sortType == MainActivity.ManageFragmentFromActivity.SORT_DEADLINE) {
+                    Log.d(TAG, "compare: Deadline***********");
+                    return o1.getDeadline().compareToIgnoreCase(o2.getDeadline());
+                } else if (sortType == MainActivity.ManageFragmentFromActivity.SORT_CREATION) {
+                    Log.d(TAG, "compare: Creation***********");
+                    return o1.getId().compareTo(o2.getId());
+                } else {
+                    return o1.getId().compareTo(o2.getId());
+                }
+
             }
         });
 

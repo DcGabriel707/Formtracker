@@ -1,6 +1,7 @@
 package com.dcgabriel.formtracker;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -13,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -84,12 +86,41 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case (R.id.action_refresh):
                 Toast.makeText(MainActivity.this, "Refreshing", Toast.LENGTH_SHORT).show();
-
                 break;
             case (R.id.action_sort):
                 Log.d(TAG, "onOptionsItemSelected: sort");
                 Toast.makeText(MainActivity.this, "Sorting", Toast.LENGTH_SHORT).show();
-                callBack.sortButton();
+                PopupMenu dropDownMenu = new PopupMenu(MainActivity.this, findViewById(R.id.action_sort));
+                dropDownMenu.getMenuInflater().inflate(R.menu.sort_menu, dropDownMenu.getMenu());
+                //This will refer to the default, ascending or descending item.
+
+                dropDownMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        MenuItem subMenuItem;
+
+                        switch (item.getItemId()) {
+                            case (R.id.sort_creation):
+                              //  subMenuItem = item.getSubMenu().getItem(0);
+                              //  subMenuItem.setChecked(!subMenuItem.isChecked());
+                                callBack.sortButton(ManageFragmentFromActivity.SORT_CREATION);
+                                Toast.makeText(MainActivity.this, "Sorting Creation", Toast.LENGTH_SHORT).show();
+                                return true;
+                            case (R.id.sort_name):
+                                callBack.sortButton(ManageFragmentFromActivity.SORT_NAME);
+                              //  subMenuItem = item.getSubMenu().getItem(1);
+                              //  subMenuItem.setChecked(!subMenuItem.isChecked());
+                                return true;
+                            case (R.id.sort_deadline):
+                                callBack.sortButton(ManageFragmentFromActivity.SORT_DEADLINE);
+                              //  subMenuItem = item.getSubMenu().getItem(2);
+                              //  subMenuItem.setChecked(!subMenuItem.isChecked());
+                                return true;
+                        }
+                        return false;
+                    }
+                });
+                dropDownMenu.show();
                 break;
         }
 
@@ -184,9 +215,13 @@ public class MainActivity extends AppCompatActivity {
 
     //
     public interface ManageFragmentFromActivity {
+        final int SORT_NAME = 1;
+        final int SORT_DEADLINE = 2;
+        final int SORT_CREATION = 3;
+
         void addButton();
 
-        void sortButton();
+        void sortButton(int sortType);
     }
 }
 
@@ -197,3 +232,5 @@ public class MainActivity extends AppCompatActivity {
 //todo add notification
 //todo add action. when user click on the deadline, calendar will be opened
 // FAB on each fragment is not properly appearing when toolbar is collapsed. FAB on each fragment can have good transition animation. FAB on Main activity requires more code, need to call fragment.onActivityResult for each tab
+// todo change all icons to rounded icons
+//todo sorting  deadline is not working properly.

@@ -5,37 +5,47 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
     </style>
 
     <!--Theme for College Tab. Changes primary color-->
     <style name="CollegeTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">#e53935</item>
-        <item name="colorPrimaryDark">#e53935</item>
+        <item name="colorPrimary">@color/collegeColor</item>
+        <item name="colorPrimaryDark">@color/collegeColor</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
     </style>
 
     <!--Theme for Employment Tab. Changes primary color-->
     <style name="EmploymentTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">#651fff</item>
-        <item name="colorPrimaryDark">#651fff</item>
+        <item name="colorPrimary">@color/employmentColor</item>
+        <item name="colorPrimaryDark">@color/employmentColor</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
     </style>
 
     <!--Theme for Employment Tab. Changes primary color-->
     <style name="OthersTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">#f57f17</item>
-        <item name="colorPrimaryDark">#f57f17</item>
+        <item name="colorPrimary">@color/othersColor</item>
+        <item name="colorPrimaryDark">@color/othersColor</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
     </style>
 
+    <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
+        <item name="android:popupBackground">@android:color/white</item>
+    </style>
 
     <style name="SplashscreenTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/bg_splashscreen</item> <!--USED FOR SPLASHSCREEN-->
