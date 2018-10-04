@@ -2,6 +2,7 @@ package com.dcgabriel.formtracker;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -93,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
                 PopupMenu dropDownMenu = new PopupMenu(MainActivity.this, findViewById(R.id.action_sort));
                 dropDownMenu.getMenuInflater().inflate(R.menu.sort_menu, dropDownMenu.getMenu());
                 //This will refer to the default, ascending or descending item.
-
                 dropDownMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {

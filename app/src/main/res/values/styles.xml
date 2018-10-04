@@ -44,16 +44,20 @@
     </style>
 
     <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
-        <item name="android:popupBackground">@android:color/white</item>
+       <item name="android:backgroundTint">@color/white</item>
+        <item name="android:popupElevation">40dp</item>
     </style>
 
     <style name="SplashscreenTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:windowBackground">@drawable/bg_splashscreen</item> <!--USED FOR SPLASHSCREEN-->
+        <item name="android:windowBackground">@drawable/bg_splashscreen
+        </item> <!--USED FOR SPLASHSCREEN-->
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:popupElevation">40dp</item>
+    </style>
 
     <style name="addEntryTextView">
         <item name="android:layout_width">wrap_content</item>
@@ -97,6 +101,7 @@
     <style name="outerLinearLayoutAddEntry">
         <item name="android:layout_margin">4dp</item>
     </style>
+
     <style name="innerLinearLayoutAddEntry">
         <item name="android:layout_marginLeft">24dp</item>
         <item name="android:layout_marginRight">24dp</item>

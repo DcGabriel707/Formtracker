@@ -36,7 +36,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/tabLayoutHeight"
         android:layout_gravity="bottom"
-
         android:background="@color/colorPrimary"
         app:tabGravity="fill"
         app:tabIndicatorColor="#ffffff"

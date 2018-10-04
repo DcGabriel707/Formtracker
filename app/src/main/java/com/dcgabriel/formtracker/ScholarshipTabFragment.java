@@ -189,18 +189,24 @@ public class ScholarshipTabFragment extends Fragment implements RecyclerViewAdap
                     return o1.getName().compareToIgnoreCase(o2.getName());
                 } else if (sortType == MainActivity.ManageFragmentFromActivity.SORT_DEADLINE) {
                     Log.d(TAG, "compare: Deadline***********");
-                    return o1.getDeadline().compareToIgnoreCase(o2.getDeadline());
+                    if (o1.getDeadline() == null && !(o2.getDeadline() == null))  //if deadline1 is empty and deadline2 is not
+                        return -1;
+                    else if (o2.getDeadline()==null && !(o1.getDeadline()==null)) //if deadline1 is empty and deadline2 is not
+                        return 1;
+                    else if(o1.getDeadline()==null && o2.getDeadline()==null) // if both are empty
+                        return o1.getName().compareToIgnoreCase(o2.getName()); //sort by alphabetical instead
+                    else
+                        return o1.getDeadline().compareTo(o2.getDeadline());
                 } else if (sortType == MainActivity.ManageFragmentFromActivity.SORT_CREATION) {
                     Log.d(TAG, "compare: Creation***********");
                     return o1.getId().compareTo(o2.getId());
                 } else {
+                    Log.d(TAG, "compare: Default***********");
                     return o1.getId().compareTo(o2.getId());
                 }
 
             }
         });
-
-
         adapter.notifyDataSetChanged();
     }
 
