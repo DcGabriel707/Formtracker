@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -43,6 +44,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(ViewHolder holder, final int position) { //called everytime a new item on the list is created. binds the data to the layout?
         Log.d(TAG, "onBindViewHolder: **********************************");
 
+        //removes a view in the cardView if it is empty
+        if ((formsList.get(position).getDeadline() == null) || (formsList.get(position).getDeadline().equals(""))) {
+            Log.d(TAG, "onBindViewHolder: before setting deadline to invisible****************");
+            Toast.makeText(mContext, "empty deadline",Toast.LENGTH_SHORT).show();
+            holder.deadlineCardView.setVisibility(View.INVISIBLE); //hides the deadlineCardView
+            //holder.relativeLayoutCardView.removeView(holder.deadlineCardView); //removes the deadlineCardView. the status Card will replace
+        }
+
         holder.nameTextView.setText(formsList.get(position).getName());
         holder.companyTextView.setText(formsList.get(position).getCompany());
         holder.detailsTextView.setText(formsList.get(position).getDetails());
@@ -58,12 +67,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         });
 
-        //removes a view in the cardView if it is empty
-        if ((formsList.get(position).getDeadline() == null) || (formsList.get(position).getDeadline().equals(""))) {
-            Log.d(TAG, "onBindViewHolder: before setting deadline to invisible****************");
-            holder.deadlineCardView.setVisibility(View.INVISIBLE); //hides the deadlineCardView
-            //holder.relativeLayoutCardView.removeView(holder.deadlineCardView); //removes the deadlineCardView. the status Card will replace
-        }
+
     }
 
     @Override

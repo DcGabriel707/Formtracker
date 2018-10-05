@@ -77,13 +77,12 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
         switch (id) {
-            case (R.id.action_settings):
+            case (R.id.action_more):
                 Toast.makeText(MainActivity.this, "Settings", Toast.LENGTH_SHORT).show();
+                PopupMenu dropDownMenu = new PopupMenu(MainActivity.this, findViewById(R.id.action_more));
+                dropDownMenu.getMenuInflater().inflate(R.menu.more_menu, dropDownMenu.getMenu());
+                dropDownMenu.show();
                 break;
             case (R.id.action_refresh):
                 Toast.makeText(MainActivity.this, "Refreshing", Toast.LENGTH_SHORT).show();
@@ -91,42 +90,44 @@ public class MainActivity extends AppCompatActivity {
             case (R.id.action_sort):
                 Log.d(TAG, "onOptionsItemSelected: sort");
                 Toast.makeText(MainActivity.this, "Sorting", Toast.LENGTH_SHORT).show();
-                PopupMenu dropDownMenu = new PopupMenu(MainActivity.this, findViewById(R.id.action_sort));
-                dropDownMenu.getMenuInflater().inflate(R.menu.sort_menu, dropDownMenu.getMenu());
-                //This will refer to the default, ascending or descending item.
-                dropDownMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        MenuItem subMenuItem;
-
-                        switch (item.getItemId()) {
-                            case (R.id.sort_creation):
-                              //  subMenuItem = item.getSubMenu().getItem(0);
-                              //  subMenuItem.setChecked(!subMenuItem.isChecked());
-                                callBack.sortButton(ManageFragmentFromActivity.SORT_CREATION);
-                                Toast.makeText(MainActivity.this, "Sorting Creation", Toast.LENGTH_SHORT).show();
-                                return true;
-                            case (R.id.sort_name):
-                                callBack.sortButton(ManageFragmentFromActivity.SORT_NAME);
-                              //  subMenuItem = item.getSubMenu().getItem(1);
-                              //  subMenuItem.setChecked(!subMenuItem.isChecked());
-                                return true;
-                            case (R.id.sort_deadline):
-                                callBack.sortButton(ManageFragmentFromActivity.SORT_DEADLINE);
-                              //  subMenuItem = item.getSubMenu().getItem(2);
-                              //  subMenuItem.setChecked(!subMenuItem.isChecked());
-                                return true;
-                        }
-                        return false;
-                    }
-                });
-                dropDownMenu.show();
+                showSortMenu();
                 break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    private void showSortMenu(){
+        PopupMenu dropDownSort = new PopupMenu(MainActivity.this, findViewById(R.id.action_sort));
+        dropDownSort.getMenuInflater().inflate(R.menu.sort_menu, dropDownSort.getMenu());
+        //This will refer to the default, ascending or descending item.
+        dropDownSort.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                MenuItem subMenuItem;
+                switch (item.getItemId()) {
+                    case (R.id.sort_creation):
+                        //  subMenuItem = item.getSubMenu().getItem(0);
+                        //  subMenuItem.setChecked(!subMenuItem.isChecked());
+                        callBack.sortButton(ManageFragmentFromActivity.SORT_CREATION);
+                        Toast.makeText(MainActivity.this, "Sorting Creation", Toast.LENGTH_SHORT).show();
+                        return true;
+                    case (R.id.sort_name):
+                        callBack.sortButton(ManageFragmentFromActivity.SORT_NAME);
+                        //  subMenuItem = item.getSubMenu().getItem(1);
+                        //  subMenuItem.setChecked(!subMenuItem.isChecked());
+                        return true;
+                    case (R.id.sort_deadline):
+                        callBack.sortButton(ManageFragmentFromActivity.SORT_DEADLINE);
+                        //  subMenuItem = item.getSubMenu().getItem(2);
+                        //  subMenuItem.setChecked(!subMenuItem.isChecked());
+                        return true;
+                }
+                return false;
+            }
+        });
+        dropDownSort.show();
+    }
 
     private void setupViewPager() {
         Log.d(TAG, "setupViewPager: ************");
@@ -228,7 +229,6 @@ public class MainActivity extends AppCompatActivity {
 
 //todo make multiple fragment for landscape mode
 //todo should i put FAB on each tab fragments or just on main activity?
-//todo make splashscreen
 //todo add notification
 //todo add action. when user click on the deadline, calendar will be opened
 // FAB on each fragment is not properly appearing when toolbar is collapsed. FAB on each fragment can have good transition animation. FAB on Main activity requires more code, need to call fragment.onActivityResult for each tab

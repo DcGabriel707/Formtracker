@@ -30,6 +30,7 @@
     <string name="others">Others</string>
     <string name="contactEmail">Contact Email</string>
     <string name="contact_phone">Contact Phone</string>
+    <string name="about">About</string>
     <string-array name="statusList">
         <item>Incomplete</item>
         <item>Submitted</item>

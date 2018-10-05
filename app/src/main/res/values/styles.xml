@@ -44,8 +44,8 @@
     </style>
 
     <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
-       <item name="android:backgroundTint">@color/white</item>
-        <item name="android:popupElevation">40dp</item>
+        <item name="android:popupBackground">@drawable/round_corner_rectangle</item>
+        <item name="android:popupElevation">@dimen/elevationMenu</item>
     </style>
 
     <style name="SplashscreenTheme" parent="Theme.AppCompat.NoActionBar">
@@ -56,7 +56,8 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
-        <item name="android:popupElevation">40dp</item>
+        <item name="android:background">@drawable/round_corner_rectangle</item>
+        <item name="android:colorBackground">@android:color/transparent</item>
     </style>
 
     <style name="addEntryTextView">

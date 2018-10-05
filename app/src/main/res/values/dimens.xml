@@ -12,4 +12,5 @@
     <dimen name="textSizeSpinnerTitle">14sp</dimen>
     <dimen name="entryDetailCardCornerRadius">16dp</dimen>
     <dimen name="tabLayoutHeight">50dp</dimen>
+    <dimen name="elevationMenu">20dp</dimen>
 </resources>
