@@ -44,19 +44,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(ViewHolder holder, final int position) { //called everytime a new item on the list is created. binds the data to the layout?
         Log.d(TAG, "onBindViewHolder: **********************************");
 
-        //removes a view in the cardView if it is empty
-        if ((formsList.get(position).getDeadline() == null) || (formsList.get(position).getDeadline().equals(""))) {
-            Log.d(TAG, "onBindViewHolder: before setting deadline to invisible****************");
 
-            holder.deadlineCardView.setVisibility(View.INVISIBLE); //hides the deadlineCardView
-            //holder.relativeLayoutCardView.removeView(holder.deadlineCardView); //removes the deadlineCardView. the status Card will replace
-        }
 
         holder.nameTextView.setText(formsList.get(position).getName());
         holder.companyTextView.setText(formsList.get(position).getCompany());
         holder.detailsTextView.setText(formsList.get(position).getDetails());
         holder.deadlineTextView.setText(formsList.get(position).getDeadline());
         holder.statusTextView.setText(formsList.get(position).getStatus());
+
+        //if deadline is empty
+        if ((formsList.get(position).getDeadline() == null) || (formsList.get(position).getDeadline().equals(""))) {
+            Log.d(TAG, "onBindViewHolder: before setting deadline to invisible****************");
+            holder.deadlineTextView.setText(R.string.noDeadline);
+
+            //holder.deadlineCardView.setVisibility(View.INVISIBLE); //hides the deadlineCardView
+            //holder.relativeLayoutCardView.removeView(holder.deadlineCardView); //removes the deadlineCardView. the status Card will replace
+        }
 
         //handles clicks on recycler view entry
         holder.relativeLayoutCardView.setOnClickListener(new View.OnClickListener() {

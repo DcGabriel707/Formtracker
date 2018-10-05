@@ -101,11 +101,10 @@ public class add_entry_scholarship extends AppCompatActivity {
             //fills the empty fields with existing data
             fillExistingData();
 
-          /**  fabDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    deleteEntryButton();
-                }
+            /**  fabDelete.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+            deleteEntryButton();
+            }
             }); */
 
 
@@ -290,6 +289,7 @@ public class add_entry_scholarship extends AppCompatActivity {
         deadlineDateString = null;
         deadlineDateTextView.setText(R.string.choose_date);
     }
+
     public void removeDateSubmitted(View view) {
         Toast.makeText(add_entry_scholarship.this, "Remove Deadline", Toast.LENGTH_SHORT).show();
         dateSubmittedString = null;
@@ -300,12 +300,25 @@ public class add_entry_scholarship extends AppCompatActivity {
         CardView deadlineCardView = findViewById(R.id.deadlineAddDateCard);
         Calendar calendar = Calendar.getInstance();
 
+        //this is the key to converting date format ?? give option in settings to change format. may change format in the databasse as well
+        //maybe just change the format when displaying the dates, not when saving the dates into the database
+        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getString(R.string.dateFormat), Locale.US);
+
         //todo add option to change date format
         deadlineDateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker datePicker, int y, int m, int d) {
+            public void onDateSet(DatePicker datePicker, int y, int m, int d) { //todo add leading zeroes to months and days. no leading zeroes causes improper sorting
                 m += 1;
-                deadlineDateString = m + "/" + d + "/" + y;
+                String temporaryDate = m + "/" + d + "/" + y;
+                try { //todo try to not use try catch
+                    Date tDate = simpleDateFormat.parse(temporaryDate); //converts into "MM/dd/yyyy" format first. maintains the leading zeroes
+                    deadlineDateString = simpleDateFormat.format(tDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    Toast.makeText(add_entry_scholarship.this, "ParceException catched", Toast.LENGTH_SHORT).show();
+                    System.exit(1);
+                }
+                Toast.makeText(add_entry_scholarship.this, deadlineDateString, Toast.LENGTH_SHORT).show();
                 deadlineDateTextView.setText(deadlineDateString);
             }
         };
@@ -313,7 +326,6 @@ public class add_entry_scholarship extends AppCompatActivity {
         //if the entry is being updated and there is a deadline
         if (currentUri != null && deadlineDateString != null) {//todo fix, enhance
             try {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
                 Date date = simpleDateFormat.parse(deadlineDateString);
                 calendar.setTime(date);
                 //deadlineDatePickerDialog.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
@@ -423,5 +435,6 @@ public class add_entry_scholarship extends AppCompatActivity {
     }
 
     //todo fix recyclerview refresh from editing and deleting
+    //todo fix deadline. no leading zeroes causes improper sorting
 
 }

@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
         final int SORT_CREATION = 3;
 
         void addButton();
-
+        void refreshButton();
         void sortButton(int sortType);
     }
 }

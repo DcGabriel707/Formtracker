@@ -66,12 +66,10 @@ public class ScholarshipTabFragment extends Fragment implements RecyclerViewAdap
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case ADD_ITEM_REQUEST: //when the addFab was clicked
-                    updateLists(); // todo  9-4-18 remove. must use notifyItemInserted instead
                     adapter.notifyItemInserted(adapter.getItemCount());
                     Toast.makeText(getActivity(), "onActivityResult Received. Entry inserted", Toast.LENGTH_SHORT).show();
                     break;
                 case UPDATE_ITEM_REQUEST: //when a specific CardView entry is clicked from the recyclerview
-                    updateLists();
                     int pos = data.getIntExtra("position", -1); // gets the position of the entry being updated/deleted
                     int action = data.getIntExtra("action", -1); //tells if the entry will be updated or deleted
                     if (action == ACTION_UPDATED) {
@@ -80,10 +78,11 @@ public class ScholarshipTabFragment extends Fragment implements RecyclerViewAdap
                     } else if (action == ACTION_DELETED) {
                         adapter.notifyItemRemoved(pos);
                         Toast.makeText(getActivity(), "onActivityResult Received. Entry deleted. Position = " + pos, Toast.LENGTH_SHORT).show();
-                    }
+                    } else
+                        adapter.notifyDataSetChanged();
                     break;
                 default:
-                    updateLists();
+                    //updateLists();
                     adapter.notifyDataSetChanged();
                     Toast.makeText(getActivity(), "onActivityResult Received. All entries updated. notifyDataSetChanged called", Toast.LENGTH_SHORT).show();
                     break;
@@ -146,14 +145,12 @@ public class ScholarshipTabFragment extends Fragment implements RecyclerViewAdap
         }
     }
 
-    //test remove whenever
+    //test remove whenever. for debugging only
     public void updateLists() {
         formsArrayList.clear();
-
         addEntriesIntoList();
         handleRecyclerView();
         adapter.notifyDataSetChanged();
-        //adapter.notifyItemInserted(adapter.getItemCount());
     }
 
     //from EditEntryInterface
@@ -177,6 +174,11 @@ public class ScholarshipTabFragment extends Fragment implements RecyclerViewAdap
     }
 
     @Override
+    public void refreshButton() {
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void sortButton(final int sortType) {
         //sort by name
 
@@ -184,20 +186,20 @@ public class ScholarshipTabFragment extends Fragment implements RecyclerViewAdap
             @Override
             public int compare(Forms o1, Forms o2) {
                 Log.d(TAG, "compare: ***************");
-                if (sortType == MainActivity.ManageFragmentFromActivity.SORT_NAME) {
+                if (sortType == MainActivity.ManageFragmentFromActivity.SORT_NAME) { //sort by name
                     Log.d(TAG, "compare: Name***********");
                     return o1.getName().compareToIgnoreCase(o2.getName());
-                } else if (sortType == MainActivity.ManageFragmentFromActivity.SORT_DEADLINE) {
+                } else if (sortType == MainActivity.ManageFragmentFromActivity.SORT_DEADLINE) { //sort by deadline
                     Log.d(TAG, "compare: Deadline***********");
                     if (o1.getDeadline() == null && !(o2.getDeadline() == null))  //if deadline1 is empty and deadline2 is not
-                        return -1;
-                    else if (o2.getDeadline()==null && !(o1.getDeadline()==null)) //if deadline1 is empty and deadline2 is not
                         return 1;
-                    else if(o1.getDeadline()==null && o2.getDeadline()==null) // if both are empty
+                    else if (o2.getDeadline() == null && !(o1.getDeadline() == null)) //if deadline1 is empty and deadline2 is not
+                        return -1;
+                    else if (o1.getDeadline() == null && o2.getDeadline() == null) // if both are empty
                         return o1.getName().compareToIgnoreCase(o2.getName()); //sort by alphabetical instead
                     else
                         return o1.getDeadline().compareTo(o2.getDeadline());
-                } else if (sortType == MainActivity.ManageFragmentFromActivity.SORT_CREATION) {
+                } else if (sortType == MainActivity.ManageFragmentFromActivity.SORT_CREATION) {//sort by date created
                     Log.d(TAG, "compare: Creation***********");
                     return o1.getId().compareTo(o2.getId());
                 } else {

@@ -31,6 +31,7 @@
     <string name="contactEmail">Contact Email</string>
     <string name="contact_phone">Contact Phone</string>
     <string name="about">About</string>
+    <string name="dateFormat">MM/dd/yyyy</string>
     <string-array name="statusList">
         <item>Incomplete</item>
         <item>Submitted</item>
