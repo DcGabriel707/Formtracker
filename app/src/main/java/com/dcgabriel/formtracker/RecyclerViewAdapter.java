@@ -47,7 +47,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         //removes a view in the cardView if it is empty
         if ((formsList.get(position).getDeadline() == null) || (formsList.get(position).getDeadline().equals(""))) {
             Log.d(TAG, "onBindViewHolder: before setting deadline to invisible****************");
-            Toast.makeText(mContext, "empty deadline",Toast.LENGTH_SHORT).show();
+
             holder.deadlineCardView.setVisibility(View.INVISIBLE); //hides the deadlineCardView
             //holder.relativeLayoutCardView.removeView(holder.deadlineCardView); //removes the deadlineCardView. the status Card will replace
         }
