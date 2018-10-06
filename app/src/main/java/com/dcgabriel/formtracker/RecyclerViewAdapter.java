@@ -26,7 +26,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.mContext = mContext;
         this.formsList = formsList;
         this.entryListener = entryListener; //ScholarshipTabFragment.this?? cast into EntryClickedInterface
-
     }
 
     @Override
@@ -69,8 +68,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 entryListener.editEntry(position);
             }
         });
-
-
     }
 
     @Override

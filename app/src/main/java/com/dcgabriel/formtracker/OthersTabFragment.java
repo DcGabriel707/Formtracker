@@ -17,18 +17,21 @@ import android.widget.Toast;
 import com.dcgabriel.formtracker.data.FormsDBHelper;
 import com.dcgabriel.formtracker.data.FormsContract.FormEntryTable;
 
-public class OthersTabFragment extends Fragment {
+public class OthersTabFragment extends TabFragment {
 
     private static final String TAG = "OthersTabFragment";
-    public OthersTabFragment() {
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        formType = FormEntryTable.FORM_TYPE_OTHERS;
+        childContext = OthersTabFragment.this.getActivity();
+        super.onCreate(savedInstanceState);
+
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView: called*****************");
-        View view = inflater.inflate(R.layout.others_tab_fragment, container, false);
-
+    protected View getFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.others_tab_fragment, parent, false);
         return view;
     }
 

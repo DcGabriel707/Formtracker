@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private Fragment currentFragment;
     private FloatingActionButton addFab;
-    private SectionsPagerAdapter adapter;
+    private SectionsPagerAdapter tabAdapter;
     private ManageFragmentFromActivity callBack; //uses the interface to apply button actions to the fragments
     private Toolbar toolbar;
 
@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case (R.id.action_refresh):
                 Toast.makeText(MainActivity.this, "Refreshing", Toast.LENGTH_SHORT).show();
+                callBack.refreshButton();
                 break;
             case (R.id.action_sort):
                 Log.d(TAG, "onOptionsItemSelected: sort");
@@ -133,12 +134,12 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "setupViewPager: ************");
         viewPager = (ViewPager) findViewById(R.id.container);
         tabLayout = (TabLayout) findViewById(R.id.tabLayoutId);
-        adapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new ScholarshipTabFragment(), "Scholarship");
-        adapter.addFragment(new CollegeTabFragment(), "College");
-        adapter.addFragment(new EmploymentTabFragment(), "Job");
-        adapter.addFragment(new OthersTabFragment(), "Other");
-        viewPager.setAdapter(adapter);
+        tabAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        tabAdapter.addFragment(new ScholarshipTabFragment(), "Scholarship");
+        tabAdapter.addFragment(new CollegeTabFragment(), "College");
+        tabAdapter.addFragment(new EmploymentTabFragment(), "Job");
+        tabAdapter.addFragment(new OthersTabFragment(), "Other");
+        viewPager.setAdapter(tabAdapter);
         tabLayout.setupWithViewPager(viewPager);
         //test
         //currentFragment = adapter.getItem(0);

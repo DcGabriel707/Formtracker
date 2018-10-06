@@ -18,24 +18,20 @@ import android.widget.Toast;
 import com.dcgabriel.formtracker.data.FormsContract.FormEntryTable;
 import com.dcgabriel.formtracker.data.FormsDBHelper;
 
-public class CollegeTabFragment extends Fragment {
+public class CollegeTabFragment extends TabFragment {
     private final String TAG = "CollegeTabFragment";
 
-    public CollegeTabFragment() {
-
-    }
-
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView: **********************");
-
-      //  View view = inflater.inflate(R.layout.college_fragment, container, false);
-        View view = inflater.inflate(R.layout.temporary_empty_view, container, false);
-
-        return view;
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        formType = FormEntryTable.FORM_TYPE_COLLEGE;
+        childContext = CollegeTabFragment.this.getActivity();
+        super.onCreate(savedInstanceState);
 
     }
 
-
+    @Override
+    protected View getFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.employment_fragment, parent, false);
+        return view;
+    }
 }

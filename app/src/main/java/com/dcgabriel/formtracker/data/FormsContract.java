@@ -73,7 +73,7 @@ public final class FormsContract {
 
         //todo add another tab for "others"??
         //todo create a projection string  that will use every field for use in querying every fields(eg. FormEntryTable.COLUMN_NAME, FormEntryTable.COLUMN_COMPANY, FormEntryTable.COLUMN_SCHOLARSHIP_AWARD, FormEntryTable.COLUMN_STATUS...)
-
+        //todo create employment location
 
     }
 }

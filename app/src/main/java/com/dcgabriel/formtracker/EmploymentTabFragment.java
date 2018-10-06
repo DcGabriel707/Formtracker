@@ -9,24 +9,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.dcgabriel.formtracker.data.FormsContract;
 import com.dcgabriel.formtracker.data.FormsDBHelper;
 
 import java.util.ArrayList;
 
-public class EmploymentTabFragment extends Fragment {
+public class EmploymentTabFragment extends TabFragment {
 
     private static final String TAG = "EmploymentTabFragment";
 
-    public EmploymentTabFragment() {
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        formType = FormsContract.FormEntryTable.FORM_TYPE_EMPLOYMENT;
+        childContext = EmploymentTabFragment.this.getActivity();
+        super.onCreate(savedInstanceState);
+
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView: called88888888888888888888888888888888888888888888888888888888888888888");
-      //  View view = inflater.inflate(R.layout.employment_fragment, container, false);
-        View view = inflater.inflate(R.layout.temporary_empty_view, container, false);
 
+    @Override
+    protected View getFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.employment_fragment, parent, false);
         return view;
     }
 
