@@ -33,13 +33,17 @@ public class FormsDBHelper extends SQLiteOpenHelper {
                 + FormEntryTable.COLUMN_STATUS + " TEXT, "
                 + FormEntryTable.COLUMN_SCHOLARSHIP_AWARD + " TEXT, "
                 + FormEntryTable.COLUMN_COLLEGE_AVE_COST + " TEXT,"
+                + FormEntryTable.COLUMN_JOB_TYPE + " TEXT,"
+                + FormEntryTable.COLUMN_JOB_SALARY + " TEXT,"
+                + FormEntryTable.COLUMN_JOB_POST_DATE + " TEXT,"
                 + FormEntryTable.COLUMN_REQUIREMENTS + " TEXT,"
                 + FormEntryTable.COLUMN_DESCRIPTION + " TEXT, "
                 + FormEntryTable.COLUMN_TODO + " TEXT,"
                 + FormEntryTable.COLUMN_NOTES + " TEXT,"
                 + FormEntryTable.COLUMN_WEBSITE + " TEXT,"
                 + FormEntryTable.COLUMN_CONTACT_EMAIL + " TEXT,"
-                + FormEntryTable.COLUMN_CONTACT_NUMBER + " TEXT"
+                + FormEntryTable.COLUMN_CONTACT_NUMBER + " TEXT,"
+                + FormEntryTable.COLUMN_LOCATION + " TEXT"
                 + "); ";
 
         db.execSQL(SQL_CREATE_FORMS_TABLE);

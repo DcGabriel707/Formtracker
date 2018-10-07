@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -16,25 +17,20 @@
 
 
     <ScrollView
-        android:elevation="2dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:elevation="2dp">
 
         <LinearLayout
             style="@style/outerLinearLayoutAddEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="50dp"
-            android:paddingTop="50dp"
-            >
+            android:orientation="vertical">
 
             <android.support.v7.widget.CardView
                 style="@style/addEntryCardView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusable="true"
-                android:focusableInTouchMode="true">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     style="@style/innerLinearLayoutAddEntry"
@@ -47,15 +43,11 @@
                         style="@style/addEntryTextView"
                         android:text="@string/name" />
 
-                    <android.support.v7.widget.CardView
-                        style="@style/addEntryEditTextCard"
-                        android:focusable="true">
+                    <android.support.v7.widget.CardView style="@style/addEntryEditTextCard">
 
                         <EditText
                             android:id="@+id/nameEditText"
                             style="@style/addEntryEditText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
                             android:inputType="textCapWords" />
                     </android.support.v7.widget.CardView>
 
@@ -69,8 +61,6 @@
                         <EditText
                             android:id="@+id/companyEditText"
                             style="@style/addEntryEditText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
                             android:inputType="textCapWords" />
                     </android.support.v7.widget.CardView>
 
@@ -84,8 +74,6 @@
                         <EditText
                             android:id="@+id/scholarshipAwardEditText"
                             style="@style/addEntryEditText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
                             android:inputType="textCapWords" />
                     </android.support.v7.widget.CardView>
                 </LinearLayout>

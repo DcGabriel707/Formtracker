@@ -31,7 +31,7 @@ public class CollegeTabFragment extends TabFragment {
 
     @Override
     protected View getFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.employment_fragment, parent, false);
+        View view = inflater.inflate(R.layout.college_fragment, parent, false);
         return view;
     }
 }

@@ -60,13 +60,14 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
             recyclerView = view.findViewById(R.id.recyclerViewCollegeFragment);
         } else if (formType.equals(FormEntryTable.FORM_TYPE_EMPLOYMENT)) {
             recyclerView = view.findViewById(R.id.recyclerViewEmploymentFragment);
-        } //else if (formType.equals(FormEntryTable.FORM_TYPE_OTHERS)) {
-         //   recyclerView = view.findViewById(R.id.recyclerViewOthersFragment);
-        //}
+        } else if (formType.equals(FormEntryTable.FORM_TYPE_OTHERS)) {
+            recyclerView = view.findViewById(R.id.recyclerViewOthersFragment);
+        }
         else {
             recyclerView = view.findViewById(R.id.recyclerViewScholarshipFragment);
         }
 
+        System.out.println(childContext.toString());
 
         adapter = new RecyclerViewAdapter(childContext, this, formsArrayList);
 
@@ -84,7 +85,7 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
 
         final int ACTION_UPDATED = 1;
         final int ACTION_DELETED = 2;
-        Toast.makeText(childContext, "onActivityResult from " + FormEntryTable.FORM_TYPE_SCHOLARSHIP, Toast.LENGTH_SHORT).show();
+        Toast.makeText(childContext, "onActivityResult from " + formType, Toast.LENGTH_SHORT).show();
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case ADD_ITEM_REQUEST: //when the addFab was clicked
@@ -133,9 +134,9 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
           shortDetail = FormEntryTable.COLUMN_JOB_TYPE;
         } else if (formType.equals(FormEntryTable.FORM_TYPE_OTHERS)) {
             //todo fix
-           shortDetail = "placeholder";
+            shortDetail = FormEntryTable.COLUMN_NAME;
         } else {
-            shortDetail = "N/A";
+            shortDetail = FormEntryTable.COLUMN_NAME;
         }
 
         String[] projection = new String[]{FormsContract.FormEntryTable.COLUMN_NAME, FormsContract.FormEntryTable.COLUMN_COMPANY,
@@ -252,3 +253,7 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
     }
 
 }
+
+
+//todo change view to/from emptyview dynamically
+//

@@ -53,16 +53,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onAttachFragment(Fragment fragment) {
-        super.onAttachFragment(fragment);
-
-        // check out  https://stackoverflow.com/questions/45602139/casting-interface-in-activity
-        if (fragment instanceof ManageFragmentFromActivity) {
-            callBack = (ManageFragmentFromActivity) fragment;
-        }
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -98,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void showSortMenu(){
+    private void showSortMenu() {
         PopupMenu dropDownSort = new PopupMenu(MainActivity.this, findViewById(R.id.action_sort));
         dropDownSort.getMenuInflater().inflate(R.menu.sort_menu, dropDownSort.getMenu());
         //This will refer to the default, ascending or descending item.
@@ -144,12 +134,14 @@ public class MainActivity extends AppCompatActivity {
         //test
         //currentFragment = adapter.getItem(0);
 
-
         //add tab icon
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_attach_money_black_24dp);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_school_black_24dp);
         tabLayout.getTabAt(2).setIcon(R.drawable.ic_work_black_24dp);
         tabLayout.getTabAt(3).setIcon(R.drawable.ic_note_add_black_24dp);
+
+        // check out  https://stackoverflow.com/questions/45602139/casting-interface-in-activity
+        callBack = (ManageFragmentFromActivity) tabAdapter.getItem(0); // sets the default callback to the scholarship tab
     }
 
     private void onTabChange() {
@@ -157,6 +149,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 Window window = MainActivity.this.getWindow();
+
+                callBack = (ManageFragmentFromActivity) tabAdapter.getItem(tabLayout.getSelectedTabPosition());  //sets the callback to the current fragment
                 switch (tabLayout.getSelectedTabPosition()) {
                     case 0:
                         toolbar.setTitle(R.string.scholarship);
@@ -222,7 +216,9 @@ public class MainActivity extends AppCompatActivity {
         final int SORT_CREATION = 3;
 
         void addButton();
+
         void refreshButton();
+
         void sortButton(int sortType);
     }
 }

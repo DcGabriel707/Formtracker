@@ -37,7 +37,7 @@ public final class FormsContract {
         public static final String COLUMN_TODO = "todo";
         public static final String COLUMN_NOTES = "other_notes";
 
-        public static final String COLUMN_LOCATION = "location"; // should be used in every tab
+        public static final String COLUMN_LOCATION = "location"; // should be used in every tab. rename to address
         public static final String COLUMN_WEBSITE = "website";
         public static final String COLUMN_CONTACT_EMAIL = "contact_email";
         public static final String COLUMN_CONTACT_NUMBER = "contact_number";
