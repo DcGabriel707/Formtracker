@@ -43,6 +43,9 @@
             android:name=".add_entry_scholarship"
             android:label="@string/addPageTitle"
             android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".add_entry_others"
+            android:parentActivityName=".MainActivity" />
 
         <provider
             android:name=".data.FormsProvider"

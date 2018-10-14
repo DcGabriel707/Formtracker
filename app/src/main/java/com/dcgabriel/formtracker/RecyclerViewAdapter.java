@@ -43,8 +43,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(ViewHolder holder, final int position) { //called everytime a new item on the list is created. binds the data to the layout?
         Log.d(TAG, "onBindViewHolder: **********************************");
 
-
-
         holder.nameTextView.setText(formsList.get(position).getName());
         holder.companyTextView.setText(formsList.get(position).getCompany());
         holder.detailsTextView.setText(formsList.get(position).getDetails());

@@ -62,8 +62,7 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
             recyclerView = view.findViewById(R.id.recyclerViewEmploymentFragment);
         } else if (formType.equals(FormEntryTable.FORM_TYPE_OTHERS)) {
             recyclerView = view.findViewById(R.id.recyclerViewOthersFragment);
-        }
-        else {
+        } else {
             recyclerView = view.findViewById(R.id.recyclerViewScholarshipFragment);
         }
 
@@ -131,7 +130,7 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
         } else if (formType.equals(FormEntryTable.FORM_TYPE_COLLEGE)) {
             shortDetail = FormEntryTable.COLUMN_COLLEGE_AVE_COST;
         } else if (formType.equals(FormEntryTable.FORM_TYPE_EMPLOYMENT)) {
-          shortDetail = FormEntryTable.COLUMN_JOB_TYPE;
+            shortDetail = FormEntryTable.COLUMN_JOB_TYPE;
         } else if (formType.equals(FormEntryTable.FORM_TYPE_OTHERS)) {
             //todo fix
             shortDetail = FormEntryTable.COLUMN_NAME;
@@ -171,7 +170,7 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
     }
 
     public void updateLists() {
-        Toast.makeText(childContext, "updateList()", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(childContext, "updateList()", Toast.LENGTH_SHORT).show();
         formsArrayList.clear();
         addEntriesIntoList();
         // handleRecyclerView();
@@ -202,11 +201,22 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
     //from EditEntryInterface
     @Override
     public void editEntry(int pos) {
-        Intent edit = new Intent(childContext, add_entry_scholarship.class);
-        edit.setData(formsArrayList.get(pos).getUri());
-        edit.putExtra("_id", Integer.toString(formsArrayList.get(pos).getId()));//passes the id to the add_entry.
-        edit.putExtra("position", pos); //todo try this. change to int??
-        startActivityForResult(edit, UPDATE_ITEM_REQUEST);
+        Intent editEntry;
+        if (formType.equals(FormEntryTable.FORM_TYPE_SCHOLARSHIP)) {
+            editEntry = new Intent(childContext, com.dcgabriel.formtracker.add_entry_scholarship.class);
+        } else if (formType.equals(FormEntryTable.FORM_TYPE_COLLEGE)) {
+            editEntry = new Intent(childContext, com.dcgabriel.formtracker.add_entry_college.class);
+        } else if (formType.equals(FormEntryTable.FORM_TYPE_EMPLOYMENT)) {
+            editEntry = new Intent(childContext, com.dcgabriel.formtracker.add_entry_employment.class);
+        } else if (formType.equals(FormEntryTable.FORM_TYPE_OTHERS)) {
+            editEntry = new Intent(childContext, com.dcgabriel.formtracker.add_entry_others.class);
+        } else {
+            editEntry = new Intent(childContext, com.dcgabriel.formtracker.add_entry_scholarship.class);
+        }
+        editEntry.setData(formsArrayList.get(pos).getUri());
+        editEntry.putExtra("_id", Integer.toString(formsArrayList.get(pos).getId()));//passes the id to the add_entry.
+        editEntry.putExtra("position", pos); //todo try this. change to int??
+        startActivityForResult(editEntry, UPDATE_ITEM_REQUEST);
 
     }
 
@@ -222,24 +232,27 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
     @Override
     public void sortButton(final int sortType) {
         //sort by name
-
         Collections.sort(formsArrayList, new Comparator<Forms>() {
             @Override
             public int compare(Forms o1, Forms o2) {
                 Log.d(TAG, "compare: ***************");
                 if (sortType == MainActivity.ManageFragmentFromActivity.SORT_NAME) { //sort by name
                     Log.d(TAG, "compare: Name***********");
+
                     return o1.getName().compareToIgnoreCase(o2.getName());
                 } else if (sortType == MainActivity.ManageFragmentFromActivity.SORT_DEADLINE) { //sort by deadline
                     Log.d(TAG, "compare: Deadline***********");
-                    if (o1.getDeadline() == null && !(o2.getDeadline() == null))  //if deadline1 is empty and deadline2 is not
+                    if (o1.getDeadline() == null && !(o2.getDeadline() == null)) {  //if deadline1 is empty and deadline2 is not
                         return 1;
-                    else if (o2.getDeadline() == null && !(o1.getDeadline() == null)) //if deadline1 is empty and deadline2 is not
+                    } else if (o2.getDeadline() == null && !(o1.getDeadline() == null)) { //if deadline1 is empty and deadline2 is not
                         return -1;
-                    else if (o1.getDeadline() == null && o2.getDeadline() == null) // if both are empty
-                        return o1.getName().compareToIgnoreCase(o2.getName()); //sort by alphabetical instead
-                    else
+                    } else if (o1.getDeadline() == null && o2.getDeadline() == null) { // if both are empty
+
+                        return o1.getName().compareToIgnoreCase(o2.getName());
+                    }//sort by alphabetical instead
+                    else {
                         return o1.getDeadline().compareTo(o2.getDeadline());
+                    }
                 } else if (sortType == MainActivity.ManageFragmentFromActivity.SORT_CREATION) {//sort by date created
                     Log.d(TAG, "compare: Creation***********");
                     return o1.getId().compareTo(o2.getId());
@@ -250,6 +263,8 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
 
             }
         });
+
+        adapter.notifyDataSetChanged();
     }
 
 }

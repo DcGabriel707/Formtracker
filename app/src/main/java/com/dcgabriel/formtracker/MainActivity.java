@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
         tabAdapter.addFragment(new CollegeTabFragment(), "College");
         tabAdapter.addFragment(new EmploymentTabFragment(), "Job");
         tabAdapter.addFragment(new OthersTabFragment(), "Other");
+
         viewPager.setAdapter(tabAdapter);
         tabLayout.setupWithViewPager(viewPager);
         //test

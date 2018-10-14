@@ -4,13 +4,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-public class add_entry_employment extends AppCompatActivity {
+import com.dcgabriel.formtracker.data.FormsContract;
+
+public class add_entry_employment extends AddEntryActivity {
 
     private final String TAG = "add_entry_employment";
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate: 888888888888888888888888888888888888888888888888888888888888888888888888888888");
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_entry_employment);
+    protected int getLayoutId() {
+        return R.layout.activity_add_entry_employment;
+    }
+
+    @Override
+    protected void initializeFromChildActivity() {
+        childContext = add_entry_employment.this;
+        formType = FormsContract.FormEntryTable.FORM_TYPE_EMPLOYMENT;
     }
 }

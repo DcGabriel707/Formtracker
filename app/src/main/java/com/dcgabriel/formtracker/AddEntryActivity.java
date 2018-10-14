@@ -3,10 +3,12 @@ package com.dcgabriel.formtracker;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -16,16 +18,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dcgabriel.formtracker.data.FormsContract;
-import com.dcgabriel.formtracker.data.FormsContract.FormEntryTable;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,48 +32,54 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class add_entry_scholarship extends AddEntryActivity {
-    private static final String TAG = "add_entry_scholarship";
+public abstract class AddEntryActivity extends AppCompatActivity {
+    private static String TAG = "AddEntry";
+    private EditText nameEditText;
+    private EditText companyEditText;
+    private Spinner statusSpinner;
+    private TextView deadlineDateTextView;
+    private TextView dateSubmittedTextView;
+    private EditText requirementEditText;
+    private EditText descriptionEditText;
+    private EditText todoEditText;
+    private EditText notesEditText;
+    private EditText websiteEditText;
+    private EditText locationEditText;
+    private EditText contactEmailEditText;
+    private EditText contactNumberEditText;
 
+    private EditText awardEditText;
+    private EditText aveCostEditText;
+    private EditText jobTypeEditText;
+    private EditText salaryEditText;
+    private EditText jobPostDateEditText;
+
+    private DatePickerDialog.OnDateSetListener deadlineDateListener;
+    private DatePickerDialog.OnDateSetListener dateSubmittedListener;
+    private String deadlineDateString;
+    private String dateSubmittedString;
+
+    protected Context childContext;
+    protected String formType;
+    private Intent intent;
+    private Uri currentUri;
+    private ContentValues values;
+    private DatePickerDialog deadlineDatePickerDialog;
+
+    protected abstract int getLayoutId();
+    protected abstract void initializeFromChildActivity();
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.activity_add_entry_scholarship;
-    }
-
-    @Override
-    protected void initializeFromChildActivity() {
-        childContext = add_entry_scholarship.this;
-        formType = FormsContract.FormEntryTable.FORM_TYPE_SCHOLARSHIP;
-    }
-
-    /** @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_entry_scholarship);
+        setContentView(getLayoutId());
 
-        awardEditText = findViewById(R.id.scholarshipAwardEditText);
+        initializeFromChildActivity();
+        handleFindViewByIds();
 
-        nameEditText = findViewById(R.id.nameEditText);
-        companyEditText = findViewById(R.id.companyEditText);
-        requirementEditText = findViewById(R.id.requirementEditText);
-        descriptionEditText = findViewById(R.id.descriptionEditText);
-        todoEditText = findViewById(R.id.todoEditText);
-        notesEditText = findViewById(R.id.notesEditText);
-        websiteEditText = findViewById(R.id.websiteEditText);
-        contactEmailEditText = findViewById(R.id.emailEditText);
-        contactNumberEditText = findViewById(R.id.numberEditText);
-
-        deadlineDateTextView = findViewById(R.id.deadlineDateText);
-        dateSubmittedTextView = findViewById(R.id.dateSubmittedText);
-
-        FloatingActionButton fabAdd = findViewById(R.id.add_entry_add_fab);
-        CardView deleteButton = findViewById(R.id.deleteButton);
-        CardView shareButton = findViewById(R.id.shareButton);
 
         //handles the status spinner. string arrays found in strings.xml todo maybe put handle all spinner in a separate class
-        statusSpinner = (Spinner) findViewById(R.id.statusSpinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.statusList));
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(childContext, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.statusList));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         statusSpinner.setAdapter(adapter);
 
@@ -82,11 +87,13 @@ public class add_entry_scholarship extends AddEntryActivity {
         intent = getIntent();
         currentUri = intent.getData();
 
-
         //handle status spinner and date submitted
         handleStatusSpinner();
 
-        //if an entry is being edited, or when the user clicked on the cardView
+        //if an entry is being edited, or when the user clicked on the cardView. Not working if i put these findviewbyids on another method
+        FloatingActionButton fabAdd = findViewById(R.id.add_entry_add_fab);
+        CardView deleteButton = findViewById(R.id.deleteButton);
+        CardView shareButton = findViewById(R.id.shareButton);
         if (currentUri != null) {
             //fills the empty fields with existing data
             fillExistingData();
@@ -122,41 +129,96 @@ public class add_entry_scholarship extends AddEntryActivity {
 
     }
 
+    protected void handleFindViewByIds() {
+        nameEditText = findViewById(R.id.nameEditText);
+        companyEditText = findViewById(R.id.companyEditText);
+        statusSpinner =  findViewById(R.id.statusSpinner);
+        deadlineDateTextView = findViewById(R.id.deadlineDateText);
+        dateSubmittedTextView = findViewById(R.id.dateSubmittedText);
+        requirementEditText = findViewById(R.id.requirementEditText);
+        descriptionEditText = findViewById(R.id.descriptionEditText);
+        todoEditText = findViewById(R.id.todoEditText);
+        notesEditText = findViewById(R.id.notesEditText);
+        websiteEditText = findViewById(R.id.websiteEditText);
+        locationEditText = findViewById(R.id.locationEditText);
+        contactEmailEditText = findViewById(R.id.emailEditText);
+        contactNumberEditText = findViewById(R.id.numberEditText);
+
+        if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_SCHOLARSHIP)) {
+            awardEditText = findViewById(R.id.scholarshipAwardEditText);
+        } else if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_COLLEGE)) {
+            aveCostEditText = findViewById(R.id.collegeAveCost);
+        } else if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_EMPLOYMENT)) {
+            jobTypeEditText = findViewById(R.id.jobTypeEditText);
+            salaryEditText = findViewById(R.id.salaryEditText);
+            jobPostDateEditText = findViewById(R.id.jobPostDateEditText);
+        } else if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_OTHERS)) {
+
+        }
+    }
+
     //retrieves the data from the editTexts and other fields
     private void retrieveData() {
         Log.d(TAG, "retrieveData: ***************");
 
-        String award = awardEditText.getText().toString().trim();
-
         String name = nameEditText.getText().toString().trim();
-        String company = companyEditText.getText().toString().trim();
         String status = statusSpinner.getSelectedItem().toString().trim();
         String requirements = requirementEditText.getText().toString().trim();
         String description = descriptionEditText.getText().toString().trim();
         String todo = todoEditText.getText().toString().trim();
         String notes = notesEditText.getText().toString().trim();
         String website = websiteEditText.getText().toString().trim();
+        String location = locationEditText.getText().toString().trim();
         String email = contactEmailEditText.getText().toString().trim();
         String phone = contactNumberEditText.getText().toString().trim();
 
         values = new ContentValues();
-        values.put(FormEntryTable.COLUMN_NAME, name);
-        values.put(FormEntryTable.COLUMN_TYPE, FormEntryTable.FORM_TYPE_SCHOLARSHIP);
-        values.put(FormEntryTable.COLUMN_COMPANY, company);
-        values.put(FormEntryTable.COLUMN_SCHOLARSHIP_AWARD, award);
-        values.put(FormEntryTable.COLUMN_STATUS, status);
-        values.put(FormEntryTable.COLUMN_DEADLINE, deadlineDateString);
-        values.put(FormEntryTable.COLUMN_DATE_SUBMITTED, dateSubmittedString);
-        values.put(FormEntryTable.COLUMN_REQUIREMENTS, requirements);
-        values.put(FormEntryTable.COLUMN_DESCRIPTION, description);
-        values.put(FormEntryTable.COLUMN_TODO, todo);
-        values.put(FormEntryTable.COLUMN_NOTES, notes);
-        values.put(FormEntryTable.COLUMN_WEBSITE, website);
-        values.put(FormEntryTable.COLUMN_CONTACT_EMAIL, email);
-        values.put(FormEntryTable.COLUMN_CONTACT_NUMBER, phone);
+        values.put(FormsContract.FormEntryTable.COLUMN_NAME, name);
+        values.put(FormsContract.FormEntryTable.COLUMN_STATUS, status);
+        values.put(FormsContract.FormEntryTable.COLUMN_DEADLINE, deadlineDateString);
+        values.put(FormsContract.FormEntryTable.COLUMN_DATE_SUBMITTED, dateSubmittedString);
+        values.put(FormsContract.FormEntryTable.COLUMN_REQUIREMENTS, requirements);
+        values.put(FormsContract.FormEntryTable.COLUMN_DESCRIPTION, description);
+        values.put(FormsContract.FormEntryTable.COLUMN_TODO, todo);
+        values.put(FormsContract.FormEntryTable.COLUMN_NOTES, notes);
+        values.put(FormsContract.FormEntryTable.COLUMN_WEBSITE, website);
+        values.put(FormsContract.FormEntryTable.COLUMN_LOCATION, location);
+        values.put(FormsContract.FormEntryTable.COLUMN_CONTACT_EMAIL, email);
+        values.put(FormsContract.FormEntryTable.COLUMN_CONTACT_NUMBER, phone);
+
+        if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_SCHOLARSHIP)) {
+            String award = awardEditText.getText().toString().trim();
+            String company = companyEditText.getText().toString().trim();
+
+            values.put(FormsContract.FormEntryTable.COLUMN_COMPANY, company);
+            values.put(FormsContract.FormEntryTable.COLUMN_SCHOLARSHIP_AWARD, award);
+            values.put(FormsContract.FormEntryTable.COLUMN_TYPE, FormsContract.FormEntryTable.FORM_TYPE_SCHOLARSHIP);
+        } else if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_COLLEGE)) {
+            String aveCost = aveCostEditText.getText().toString().trim();
+            values.put(FormsContract.FormEntryTable.COLUMN_COLLEGE_AVE_COST, aveCost);
+            values.put(FormsContract.FormEntryTable.COLUMN_TYPE, FormsContract.FormEntryTable.FORM_TYPE_COLLEGE);
+        } else if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_EMPLOYMENT)) {
+            String company = companyEditText.getText().toString().trim();
+            String jobType = jobTypeEditText.getText().toString().trim();
+            String salary = salaryEditText.getText().toString().trim();
+            String jobPostDate = jobPostDateEditText.getText().toString().trim();
+
+
+            values.put(FormsContract.FormEntryTable.COLUMN_COMPANY, company);
+            values.put(FormsContract.FormEntryTable.COLUMN_JOB_TYPE, jobType);
+            values.put(FormsContract.FormEntryTable.COLUMN_JOB_SALARY, salary);
+            values.put(FormsContract.FormEntryTable.COLUMN_JOB_POST_DATE, jobPostDate);
+            values.put(FormsContract.FormEntryTable.COLUMN_TYPE, FormsContract.FormEntryTable.FORM_TYPE_EMPLOYMENT);
+        } else if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_OTHERS)) {
+            String company = companyEditText.getText().toString().trim();
+
+            values.put(FormsContract.FormEntryTable.COLUMN_COMPANY, company);
+            values.put(FormsContract.FormEntryTable.COLUMN_TYPE, FormsContract.FormEntryTable.FORM_TYPE_OTHERS);
+        }
 
         Log.d(TAG, "retrieveData: deadlineFinal = " + deadlineDateString + "////////////////////////////////////////////////////////////");
     }
+
 
     //change name to addEntryButton or doneButton
     //addButton shares an FAB with the update button.
@@ -171,13 +233,14 @@ public class add_entry_scholarship extends AddEntryActivity {
         //SQLiteDatabase db = formsDBHelper.getWritableDatabase();
 
         //instead of this long newRowId = db.insert(FormEntryTable.TABLE_NAME, null, values);
-        Uri uri = getContentResolver().insert(FormEntryTable.CONTENT_URI, values);
+        Uri uri = getContentResolver().insert(FormsContract.FormEntryTable.CONTENT_URI, values);
         Log.d(TAG, "addButton: data inserted****************");
 
         Intent result = new Intent();
         setResult(Activity.RESULT_OK, result);
         finish();
     }
+
 
     //share FAB with the addButton()
     private void updateEntryButton() {
@@ -203,7 +266,6 @@ public class add_entry_scholarship extends AddEntryActivity {
     }
 
     private void deleteEntryButton() {
-
         //Burrowed from https://classroom.udacity.com/courses/ud845/lessons/9baef157-4f66-4513-b612-90c5f6975c21/concepts/5bcf3ea1-e2fe-4259-85d6-8f43b745bd35#
         // CHANGE***************************
         // Only perform the delete if this is an existing pet.
@@ -212,15 +274,11 @@ public class add_entry_scholarship extends AddEntryActivity {
             // Pass in null for the selection and selection args because the mCurrentPetUri
             // content URI already identifies the pet that we want.
             int rowsDeleted = getContentResolver().delete(currentUri, null, null);
-
-            // Show a toast message depending on whether or not the delete was successful.
             if (rowsDeleted == 0) {
-                // If no rows were deleted, then there was an error with the delete.
-                Toast.makeText(this, "Delete Failed",
+                Toast.makeText(childContext, "Delete Failed",
                         Toast.LENGTH_SHORT).show();
             } else {
-                // Otherwise, the delete was successful and we can display a toast.
-                Toast.makeText(this, "Delete Successful",
+                Toast.makeText(childContext, "Delete Successful",
                         Toast.LENGTH_SHORT).show();
             }
         }
@@ -231,8 +289,8 @@ public class add_entry_scholarship extends AddEntryActivity {
         result.putExtra("position", pos);
         result.putExtra("action", 2); //specifies that the action is deleted not updated
         finish();
-
     }
+
 
     private void handleStatusSpinner() {
         Log.d(TAG, "handleStatusSpinner: **********************");
@@ -242,6 +300,7 @@ public class add_entry_scholarship extends AddEntryActivity {
 
         statusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             boolean isRemoved = false;
+
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 Log.d(TAG, "handleStatusSSpinner: onItemClick: **************************");
@@ -266,14 +325,15 @@ public class add_entry_scholarship extends AddEntryActivity {
         });
     }
 
+
     public void removeDeadline(View view) {
-        Toast.makeText(add_entry_scholarship.this, "Remove Deadline", Toast.LENGTH_SHORT).show();
+        Toast.makeText(childContext, "Remove Deadline", Toast.LENGTH_SHORT).show();
         deadlineDateString = null;
         deadlineDateTextView.setText(R.string.choose_date);
     }
 
     public void removeDateSubmitted(View view) {
-        Toast.makeText(add_entry_scholarship.this, "Remove Deadline", Toast.LENGTH_SHORT).show();
+        Toast.makeText(childContext, "Remove Deadline", Toast.LENGTH_SHORT).show();
         dateSubmittedString = null;
         dateSubmittedTextView.setText(R.string.choose_date);
     }
@@ -297,10 +357,10 @@ public class add_entry_scholarship extends AddEntryActivity {
                     deadlineDateString = simpleDateFormat.format(tDate);
                 } catch (ParseException e) {
                     e.printStackTrace();
-                    Toast.makeText(add_entry_scholarship.this, "ParceException catched", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(childContext, "ParceException catched", Toast.LENGTH_SHORT).show();
                     System.exit(1);
                 }
-                Toast.makeText(add_entry_scholarship.this, deadlineDateString, Toast.LENGTH_SHORT).show();
+                Toast.makeText(childContext, deadlineDateString, Toast.LENGTH_SHORT).show();
                 deadlineDateTextView.setText(deadlineDateString);
             }
         };
@@ -311,13 +371,13 @@ public class add_entry_scholarship extends AddEntryActivity {
                 Date date = simpleDateFormat.parse(deadlineDateString);
                 calendar.setTime(date);
                 //deadlineDatePickerDialog.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                deadlineDatePickerDialog = new DatePickerDialog(add_entry_scholarship.this, android.R.style.Theme_DeviceDefault_Light_Dialog, deadlineDateListener,
+                deadlineDatePickerDialog = new DatePickerDialog(childContext, android.R.style.Theme_DeviceDefault_Light_Dialog, deadlineDateListener,
                         calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         } else { //if there is no deadline.
-            deadlineDatePickerDialog = new DatePickerDialog(add_entry_scholarship.this, android.R.style.Theme_DeviceDefault_Light_Dialog, deadlineDateListener,
+            deadlineDatePickerDialog = new DatePickerDialog(childContext, android.R.style.Theme_DeviceDefault_Light_Dialog, deadlineDateListener,
                     calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         }
 
@@ -328,8 +388,9 @@ public class add_entry_scholarship extends AddEntryActivity {
                 deadlineDatePickerDialog.show();
             }
         });
-
+        Log.d(TAG, "setDeadlineDate bottom: ************///////////////// deadlineDateString=" + deadlineDateString);
     }
+
 
     private void setDateSubmitted() {
         CardView dateSubmittedCardView = (CardView) findViewById(R.id.dateSubmittedCardView);
@@ -344,40 +405,43 @@ public class add_entry_scholarship extends AddEntryActivity {
             }
         };
 
-        MyCalendarDialog myCalendarDialog = new MyCalendarDialog(add_entry_scholarship.this, dateSubmittedCardView, dateSubmittedString, dateSubmittedTextView, currentUri, dateSubmittedListener);
+        MyCalendarDialog myCalendarDialog = new MyCalendarDialog(childContext, dateSubmittedCardView, dateSubmittedString, dateSubmittedTextView, currentUri, dateSubmittedListener);
     }
+
 
     //fills the fields with existing data from the database?
     private void fillExistingData() {
         Log.d(TAG, "fillExistingData: ********************");
 
-        String[] projection = {FormEntryTable.COLUMN_NAME, FormEntryTable.COLUMN_COMPANY, FormEntryTable.COLUMN_SCHOLARSHIP_AWARD,
-                FormEntryTable.COLUMN_STATUS, FormEntryTable.COLUMN_DEADLINE, FormEntryTable.COLUMN_DATE_SUBMITTED, FormEntryTable.COLUMN_REQUIREMENTS,
-                FormEntryTable.COLUMN_DESCRIPTION, FormEntryTable.COLUMN_TODO, FormEntryTable.COLUMN_NOTES,
-                FormEntryTable.COLUMN_WEBSITE, FormEntryTable.COLUMN_CONTACT_EMAIL, FormEntryTable.COLUMN_CONTACT_NUMBER}; //temp
-        String selection = FormEntryTable._ID + "=?";
+        //maybe add all columns here. Would it slow down anything?
+        String[] projection = {FormsContract.FormEntryTable.COLUMN_NAME, FormsContract.FormEntryTable.COLUMN_COMPANY, FormsContract.FormEntryTable.COLUMN_SCHOLARSHIP_AWARD,
+                FormsContract.FormEntryTable.COLUMN_COLLEGE_AVE_COST,
+                FormsContract.FormEntryTable.COLUMN_JOB_TYPE, FormsContract.FormEntryTable.COLUMN_JOB_SALARY, FormsContract.FormEntryTable.COLUMN_JOB_POST_DATE,
+                FormsContract.FormEntryTable.COLUMN_STATUS, FormsContract.FormEntryTable.COLUMN_DEADLINE, FormsContract.FormEntryTable.COLUMN_DATE_SUBMITTED, FormsContract.FormEntryTable.COLUMN_REQUIREMENTS,
+                FormsContract.FormEntryTable.COLUMN_DESCRIPTION, FormsContract.FormEntryTable.COLUMN_TODO, FormsContract.FormEntryTable.COLUMN_NOTES,
+                FormsContract.FormEntryTable.COLUMN_WEBSITE, FormsContract.FormEntryTable.COLUMN_LOCATION, FormsContract.FormEntryTable.COLUMN_CONTACT_EMAIL, FormsContract.FormEntryTable.COLUMN_CONTACT_NUMBER};
+
+        String selection = FormsContract.FormEntryTable._ID + "=?";
         String[] selectionArgs = {intent.getStringExtra("_id")};
 
         Log.d(TAG, "fillExistingData: before cursor*****************");
-        Cursor cursor = add_entry_scholarship.this.getContentResolver().query(FormEntryTable.CONTENT_URI, projection, selection, selectionArgs, null);
+        Cursor cursor = childContext.getContentResolver().query(FormsContract.FormEntryTable.CONTENT_URI, projection, selection, selectionArgs, null);
 
         if (cursor != null && cursor.moveToFirst()) { //does it need to have cursor != null?
-            nameEditText.setText(cursor.getString(cursor.getColumnIndex(FormEntryTable.COLUMN_NAME)));
-            companyEditText.setText(cursor.getString(cursor.getColumnIndex(FormEntryTable.COLUMN_COMPANY)));
-            awardEditText.setText(cursor.getString(cursor.getColumnIndex(FormEntryTable.COLUMN_SCHOLARSHIP_AWARD)));
+            nameEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_NAME)));
 
-            deadlineDateString = cursor.getString(cursor.getColumnIndex(FormEntryTable.COLUMN_DEADLINE));
+            deadlineDateString = cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_DEADLINE));
             if (deadlineDateString != null) {
-                Log.d(TAG, "fillExistingData: has deadline ***************deadlineDateString=" + deadlineDateString);
+                Log.d(TAG, "fillExistingData: has deadline ****************///////////deadlineDateString=" + deadlineDateString);
                 deadlineDateTextView.setText(deadlineDateString);
             } else {
                 Log.d(TAG, "fillExistingData: no deadlineDateString***** = " + deadlineDateString);
                 deadlineDateTextView.setText(R.string.noDeadline);
             }
 
-            dateSubmittedString = cursor.getString(cursor.getColumnIndex(FormEntryTable.COLUMN_DATE_SUBMITTED));
+            dateSubmittedString = cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_DATE_SUBMITTED));
             if (dateSubmittedString != null) {
-                Log.d(TAG, "fillExistingData: has dateSubmitted ***************dateSubmittedString=" + dateSubmittedString);
+                Log.d(TAG, "fillExistingData: has dateSubmitted ****************///////////dateSubmittedString=" + dateSubmittedString);
                 dateSubmittedTextView.setText(dateSubmittedString);
             } else {
                 Log.d(TAG, "fillExistingData: no deadlineDateString***** = " + deadlineDateString);
@@ -385,17 +449,17 @@ public class add_entry_scholarship extends AddEntryActivity {
             }
 
             Log.d(TAG, "fillExistingData: before filling status********");
-            switch (cursor.getString(cursor.getColumnIndex(FormEntryTable.COLUMN_STATUS))) { //fills in the status
-                case FormEntryTable.STATUS_INCOMPLETE:
+            switch (cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_STATUS))) { //fills in the status
+                case FormsContract.FormEntryTable.STATUS_INCOMPLETE:
                     statusSpinner.setSelection(0);
                     break;
-                case FormEntryTable.STATUS_SUBMITTED:
+                case FormsContract.FormEntryTable.STATUS_SUBMITTED:
                     statusSpinner.setSelection(1);
                     break;
-                case FormEntryTable.STATUS_ACCEPTED:
+                case FormsContract.FormEntryTable.STATUS_ACCEPTED:
                     statusSpinner.setSelection(2);
                     break;
-                case FormEntryTable.STATUS_REJECTED:
+                case FormsContract.FormEntryTable.STATUS_REJECTED:
                     statusSpinner.setSelection(3);
                     break;
                 default:
@@ -403,20 +467,37 @@ public class add_entry_scholarship extends AddEntryActivity {
                     break;
             }
 
-            requirementEditText.setText(cursor.getString(cursor.getColumnIndex(FormEntryTable.COLUMN_REQUIREMENTS)));
-            descriptionEditText.setText(cursor.getString(cursor.getColumnIndex(FormEntryTable.COLUMN_DESCRIPTION)));
-            todoEditText.setText(cursor.getString(cursor.getColumnIndex(FormEntryTable.COLUMN_TODO)));
-            notesEditText.setText(cursor.getString(cursor.getColumnIndex(FormEntryTable.COLUMN_NOTES)));
-            websiteEditText.setText(cursor.getString(cursor.getColumnIndex(FormEntryTable.COLUMN_WEBSITE)));
-            contactEmailEditText.setText(cursor.getString(cursor.getColumnIndex(FormEntryTable.COLUMN_CONTACT_EMAIL)));
-            contactNumberEditText.setText(cursor.getString(cursor.getColumnIndex(FormEntryTable.COLUMN_CONTACT_NUMBER)));
+            requirementEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_REQUIREMENTS)));
+            descriptionEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_DESCRIPTION)));
+            todoEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_TODO)));
+            notesEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_NOTES)));
+            websiteEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_WEBSITE)));
+            locationEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_LOCATION)));
+            contactEmailEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_CONTACT_EMAIL)));
+            contactNumberEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_CONTACT_NUMBER)));
+
+            if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_SCHOLARSHIP)) {
+
+                companyEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_COMPANY)));
+                awardEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_SCHOLARSHIP_AWARD)));
+            } else if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_COLLEGE)) {
+                aveCostEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_COLLEGE_AVE_COST)));
+            } else if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_EMPLOYMENT)) {
+
+                companyEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_COMPANY)));
+                jobTypeEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_JOB_TYPE)));
+                salaryEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_JOB_SALARY)));
+                jobPostDateEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_JOB_POST_DATE)));
+            } else if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_OTHERS)) {
+                companyEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_COMPANY)));
+            }
+
         }
 
         cursor.close();
         Log.d(TAG, "fillExistingData: cursor closed*********************");
     }
 
-    //todo fix recyclerview refresh from editing and deleting
-    //todo fix deadline. no leading zeroes causes improper sorting
-**/
+    //no leading zeroes causes improper sorting
+    //hide keyboard when clicked outside edittext
 }

@@ -38,10 +38,9 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-
                     <TextView
                         style="@style/addEntryTextView"
-                        android:text="@string/job_title" />
+                        android:text="@string/name" />
 
                     <android.support.v7.widget.CardView style="@style/addEntryEditTextCard">
 
@@ -50,7 +49,6 @@
                             style="@style/addEntryEditText"
                             android:inputType="textCapWords" />
                     </android.support.v7.widget.CardView>
-
 
                     <TextView
                         style="@style/addEntryTextView"
@@ -62,42 +60,6 @@
                             android:id="@+id/companyEditText"
                             style="@style/addEntryEditText"
                             android:inputType="textCapWords" />
-                    </android.support.v7.widget.CardView>
-
-                    <TextView
-                        style="@style/addEntryTextView"
-                        android:text="@string/job_type" />
-
-                    <android.support.v7.widget.CardView style="@style/addEntryEditTextCard">
-
-                        <EditText
-                            android:id="@+id/jobTypeEditText"
-                            style="@style/addEntryEditText"
-                            android:inputType="textCapWords" />
-                    </android.support.v7.widget.CardView>
-
-                    <TextView
-                        style="@style/addEntryTextView"
-                        android:text="@string/salary" />
-
-                    <android.support.v7.widget.CardView style="@style/addEntryEditTextCard">
-
-                        <EditText
-                            android:id="@+id/salaryEditText"
-                            style="@style/addEntryEditText"
-                            android:inputType="numberDecimal" />
-                    </android.support.v7.widget.CardView>
-
-                    <TextView
-                        style="@style/addEntryTextView"
-                        android:text="@string/job_post_date" />
-
-                    <android.support.v7.widget.CardView style="@style/addEntryEditTextCard">
-
-                        <EditText
-                            android:id="@+id/jobPostDateEditText"
-                            style="@style/addEntryEditText"
-                            android:inputType="datetime" />
                     </android.support.v7.widget.CardView>
                 </LinearLayout>
             </android.support.v7.widget.CardView>

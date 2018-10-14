@@ -250,7 +250,20 @@
 
             <TextView
                 style="@style/addEntryTextView"
+                android:text="@string/address" />
+
+            <android.support.v7.widget.CardView style="@style/addEntryEditTextCard">
+
+                <EditText
+                    android:id="@+id/locationEditText"
+                    style="@style/addEntryEditText"
+                    android:inputType="textPostalAddress" />
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                style="@style/addEntryTextView"
                 android:text="@string/contactEmail" />
+
             <android.support.v7.widget.CardView style="@style/addEntryEditTextCard">
 
                 <EditText
@@ -262,6 +275,7 @@
             <TextView
                 style="@style/addEntryTextView"
                 android:text="@string/contact_phone" />
+
             <android.support.v7.widget.CardView style="@style/addEntryEditTextCard">
 
                 <EditText
