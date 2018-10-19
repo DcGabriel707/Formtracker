@@ -8,22 +8,23 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashscreenActivity"
+        <activity
+            android:name=".SplashscreenActivity"
             android:theme="@style/SplashscreenTheme">
             <intent-filter>
-                <action
-                    android:name="android.intent.action.MAIN"/>
-                <category
-                    android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
-           <!-- moved to the splashscreen
+
+            <!--
+            moved to the splashscreen
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -52,6 +53,14 @@
             android:authorities="com.dcgabriel.formtracker"
             android:exported="false" />
 
+        <activity
+            android:name=".Settings"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".AboutPage"
+            android:label="@string/title_activity_about_page"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

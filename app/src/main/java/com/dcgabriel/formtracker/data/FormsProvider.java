@@ -17,7 +17,6 @@ public class FormsProvider extends ContentProvider {
 
     private static final String TAG = "FormsProvider";
     private FormsDBHelper formsDBHelper;
-
     //URI matcher. to be used in a case statement.
     //does not matter what the int is as long as they are unique
     private static final int FORMS = 100; //all rows?

@@ -1,8 +1,7 @@
 package com.dcgabriel.formtracker;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import com.dcgabriel.formtracker.data.FormsContract;
 
@@ -20,4 +19,12 @@ public class add_entry_employment extends AddEntryActivity {
         childContext = add_entry_employment.this;
         formType = FormsContract.FormEntryTable.FORM_TYPE_EMPLOYMENT;
     }
+
+    public void removeJobPostDate(View view) {
+        Toast.makeText(childContext, "Remove Deadline", Toast.LENGTH_SHORT).show();
+        jobPostDateString = null;
+        jobPostDateTextView.setText(R.string.choose_date);
+
+    }
+
 }

@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +19,8 @@ import android.widget.Toast;
 import com.dcgabriel.formtracker.data.FormsContract;
 import com.dcgabriel.formtracker.data.FormsContract.FormEntryTable;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -120,11 +121,12 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
     }
 
 
-    //detail textview is different for each form type
     protected void addEntriesIntoList() {
         Log.d(TAG, "addEntriesIntoList: ************");
         String shortDetail;
+        String companyOrLocation; //college tab uses location in place of company
 
+        //detail textview is different for each form type
         if (formType.equals(FormEntryTable.FORM_TYPE_SCHOLARSHIP)) {
             shortDetail = FormEntryTable.COLUMN_SCHOLARSHIP_AWARD;
         } else if (formType.equals(FormEntryTable.FORM_TYPE_COLLEGE)) {
@@ -133,12 +135,18 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
             shortDetail = FormEntryTable.COLUMN_JOB_TYPE;
         } else if (formType.equals(FormEntryTable.FORM_TYPE_OTHERS)) {
             //todo fix
-            shortDetail = FormEntryTable.COLUMN_NAME;
+            shortDetail = FormEntryTable.COLUMN_LOCATION;
         } else {
-            shortDetail = FormEntryTable.COLUMN_NAME;
+            shortDetail = "..."; //for debugging
         }
 
-        String[] projection = new String[]{FormsContract.FormEntryTable.COLUMN_NAME, FormsContract.FormEntryTable.COLUMN_COMPANY,
+        if (formType.equals(FormEntryTable.FORM_TYPE_COLLEGE)) {
+            companyOrLocation = FormEntryTable.COLUMN_LOCATION;
+        } else {
+            companyOrLocation = FormsContract.FormEntryTable.COLUMN_COMPANY;
+        }
+
+        String[] projection = new String[]{FormsContract.FormEntryTable.COLUMN_NAME, companyOrLocation,
                 shortDetail, FormsContract.FormEntryTable.COLUMN_STATUS,
                 FormsContract.FormEntryTable.COLUMN_DEADLINE, FormsContract.FormEntryTable._ID};
         String selection = FormsContract.FormEntryTable.COLUMN_TYPE + "=?";
@@ -155,7 +163,7 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
                 formsArrayList.add(new Forms());
                 Log.d(TAG, "addEntriesIntoList: inside loop" + cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_NAME)));
                 formsArrayList.get(i).setName(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_NAME)));
-                formsArrayList.get(i).setCompany(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_COMPANY)));
+                formsArrayList.get(i).setCompany(cursor.getString(cursor.getColumnIndex(companyOrLocation)));
                 formsArrayList.get(i).setDetails(cursor.getString(cursor.getColumnIndex(shortDetail)));
                 formsArrayList.get(i).setDeadline(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_DEADLINE)));
                 formsArrayList.get(i).setStatus(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_STATUS)));
@@ -251,7 +259,16 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
                         return o1.getName().compareToIgnoreCase(o2.getName());
                     }//sort by alphabetical instead
                     else {
-                        return o1.getDeadline().compareTo(o2.getDeadline());
+                        try {
+                            //year must be sorted first before month and day
+                            return new SimpleDateFormat("dd/mm/yyyy").parse(o1.getDeadline()).compareTo(new SimpleDateFormat("dd/mm/yyyy").parse(o2.getDeadline()));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            Toast.makeText(childContext, "ParceException catched", Toast.LENGTH_SHORT).show();
+                            return o1.getDeadline().compareTo(o2.getDeadline());
+
+                        }
+
                     }
                 } else if (sortType == MainActivity.ManageFragmentFromActivity.SORT_CREATION) {//sort by date created
                     Log.d(TAG, "compare: Creation***********");

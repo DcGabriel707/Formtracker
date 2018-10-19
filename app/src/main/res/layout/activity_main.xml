@@ -50,10 +50,10 @@
         android:layout_margin="@dimen/fab_margin"
         android:layout_marginBottom="32dp"
         android:stateListAnimator="@animator/button_elevate2"
-        app:backgroundTint="@color/white"
+        app:backgroundTint="#2979ff"
         app:layout_anchor="@id/tabLayoutId"
         app:layout_anchorGravity="center|top"
-        app:srcCompat="@drawable/ic_add_grey_24dp" />
+        app:srcCompat="@drawable/ic_add_black_24dp" />
 
 
 </android.support.design.widget.CoordinatorLayout>

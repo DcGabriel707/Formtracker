@@ -28,7 +28,6 @@ import com.dcgabriel.formtracker.data.FormsContract;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -52,21 +51,25 @@ public abstract class AddEntryActivity extends AppCompatActivity {
     private EditText aveCostEditText;
     private EditText jobTypeEditText;
     private EditText salaryEditText;
-    private EditText jobPostDateEditText;
 
     private DatePickerDialog.OnDateSetListener deadlineDateListener;
     private DatePickerDialog.OnDateSetListener dateSubmittedListener;
+    protected String jobPostDateString; //accessed from the add employmeny activity
     private String deadlineDateString;
     private String dateSubmittedString;
+    protected TextView jobPostDateTextView;
+    private DatePickerDialog.OnDateSetListener jobPostDateListener;
+
 
     protected Context childContext;
     protected String formType;
     private Intent intent;
     private Uri currentUri;
     private ContentValues values;
-    private DatePickerDialog deadlineDatePickerDialog;
+    private SimpleDateFormat simpleDateFormat;
 
     protected abstract int getLayoutId();
+
     protected abstract void initializeFromChildActivity();
 
     @Override
@@ -93,7 +96,7 @@ public abstract class AddEntryActivity extends AppCompatActivity {
         //if an entry is being edited, or when the user clicked on the cardView. Not working if i put these findviewbyids on another method
         FloatingActionButton fabAdd = findViewById(R.id.add_entry_add_fab);
         CardView deleteButton = findViewById(R.id.deleteButton);
-        CardView shareButton = findViewById(R.id.shareButton);
+        final CardView shareButton = findViewById(R.id.shareButton);
         if (currentUri != null) {
             //fills the empty fields with existing data
             fillExistingData();
@@ -111,6 +114,13 @@ public abstract class AddEntryActivity extends AppCompatActivity {
                 }
             });
 
+            shareButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    shareEntryButton();
+                }
+            });
+
         } else {
             deleteButton.setVisibility(View.INVISIBLE);
             shareButton.setVisibility(View.INVISIBLE);
@@ -122,17 +132,24 @@ public abstract class AddEntryActivity extends AppCompatActivity {
             });
         }
 
+        //this is the key to converting date format ?? give option in settings to change format. may change format in the databasse as well
+        //maybe just change the format when displaying the dates, not when saving the dates into the database
+        simpleDateFormat = new SimpleDateFormat(getString(R.string.dateFormat), Locale.US);
         //handles the deadline date. called again to update with existing date
         setDeadlineDate();
         //handles the date submitted
         setDateSubmitted();
+        //
+        if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_EMPLOYMENT)) {
+            setJobPostDate();
+        }
 
     }
 
     protected void handleFindViewByIds() {
         nameEditText = findViewById(R.id.nameEditText);
         companyEditText = findViewById(R.id.companyEditText);
-        statusSpinner =  findViewById(R.id.statusSpinner);
+        statusSpinner = findViewById(R.id.statusSpinner);
         deadlineDateTextView = findViewById(R.id.deadlineDateText);
         dateSubmittedTextView = findViewById(R.id.dateSubmittedText);
         requirementEditText = findViewById(R.id.requirementEditText);
@@ -151,7 +168,7 @@ public abstract class AddEntryActivity extends AppCompatActivity {
         } else if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_EMPLOYMENT)) {
             jobTypeEditText = findViewById(R.id.jobTypeEditText);
             salaryEditText = findViewById(R.id.salaryEditText);
-            jobPostDateEditText = findViewById(R.id.jobPostDateEditText);
+            jobPostDateTextView = findViewById(R.id.jobPostDateTextView);
         } else if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_OTHERS)) {
 
         }
@@ -201,13 +218,11 @@ public abstract class AddEntryActivity extends AppCompatActivity {
             String company = companyEditText.getText().toString().trim();
             String jobType = jobTypeEditText.getText().toString().trim();
             String salary = salaryEditText.getText().toString().trim();
-            String jobPostDate = jobPostDateEditText.getText().toString().trim();
-
 
             values.put(FormsContract.FormEntryTable.COLUMN_COMPANY, company);
             values.put(FormsContract.FormEntryTable.COLUMN_JOB_TYPE, jobType);
             values.put(FormsContract.FormEntryTable.COLUMN_JOB_SALARY, salary);
-            values.put(FormsContract.FormEntryTable.COLUMN_JOB_POST_DATE, jobPostDate);
+            values.put(FormsContract.FormEntryTable.COLUMN_JOB_POST_DATE, jobPostDateString);
             values.put(FormsContract.FormEntryTable.COLUMN_TYPE, FormsContract.FormEntryTable.FORM_TYPE_EMPLOYMENT);
         } else if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_OTHERS)) {
             String company = companyEditText.getText().toString().trim();
@@ -275,11 +290,9 @@ public abstract class AddEntryActivity extends AppCompatActivity {
             // content URI already identifies the pet that we want.
             int rowsDeleted = getContentResolver().delete(currentUri, null, null);
             if (rowsDeleted == 0) {
-                Toast.makeText(childContext, "Delete Failed",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(childContext, "Delete Failed", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(childContext, "Delete Successful",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(childContext, "Delete Successful", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -291,7 +304,59 @@ public abstract class AddEntryActivity extends AppCompatActivity {
         finish();
     }
 
+    private void shareEntryButton() {
+        Toast.makeText(childContext, "Share", Toast.LENGTH_SHORT).show();
+        String shareText = getAllEntryInfo();
 
+
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+        shareIntent.setType("text/plain");
+        startActivity(shareIntent);
+    }
+
+    //checks if column value is empty, else, adds it into the message to be shared
+    private String addText(String message, String title, String value) {
+        if (value.equals("") || value == null) {
+            return message;
+        } else {
+            return message.concat("\n" + title + ": " + value);
+        }
+    }
+
+    String getAllEntryInfo() {
+        String shareText = " ";
+        //todo check projection if it is the most efficient
+        String[] projection = {FormsContract.FormEntryTable.COLUMN_NAME, FormsContract.FormEntryTable.COLUMN_COMPANY, FormsContract.FormEntryTable.COLUMN_SCHOLARSHIP_AWARD,
+                FormsContract.FormEntryTable.COLUMN_COLLEGE_AVE_COST,
+                FormsContract.FormEntryTable.COLUMN_JOB_TYPE, FormsContract.FormEntryTable.COLUMN_JOB_SALARY, FormsContract.FormEntryTable.COLUMN_JOB_POST_DATE,
+                FormsContract.FormEntryTable.COLUMN_STATUS, FormsContract.FormEntryTable.COLUMN_DEADLINE, FormsContract.FormEntryTable.COLUMN_DATE_SUBMITTED, FormsContract.FormEntryTable.COLUMN_REQUIREMENTS,
+                FormsContract.FormEntryTable.COLUMN_DESCRIPTION, FormsContract.FormEntryTable.COLUMN_TODO, FormsContract.FormEntryTable.COLUMN_NOTES,
+                FormsContract.FormEntryTable.COLUMN_WEBSITE, FormsContract.FormEntryTable.COLUMN_LOCATION, FormsContract.FormEntryTable.COLUMN_CONTACT_EMAIL, FormsContract.FormEntryTable.COLUMN_CONTACT_NUMBER};
+
+        String selection = FormsContract.FormEntryTable._ID + "=?";
+        String[] selectionArgs = {intent.getStringExtra("_id")};
+
+        Cursor cursor = childContext.getContentResolver().query(FormsContract.FormEntryTable.CONTENT_URI, projection, selection, selectionArgs, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            shareText = addText(shareText, childContext.getString(R.string.name), cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_NAME)));
+            shareText = addText(shareText, childContext.getString(R.string.company), cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_COMPANY)));
+            shareText = addText(shareText, childContext.getString(R.string.description), cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_DESCRIPTION)));
+            shareText = addText(shareText, childContext.getString(R.string.requirements), cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_REQUIREMENTS)));
+            shareText = addText(shareText, childContext.getString(R.string.deadline), cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_DEADLINE)));
+            shareText = addText(shareText, childContext.getString(R.string.todo), cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_TODO)));
+            shareText = addText(shareText, childContext.getString(R.string.notes), cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_NOTES)));
+            shareText = addText(shareText, childContext.getString(R.string.website), cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_WEBSITE)));
+            shareText = addText(shareText, childContext.getString(R.string.address), cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_LOCATION)));
+            shareText = addText(shareText, childContext.getString(R.string.contactEmail), cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_CONTACT_EMAIL)));
+            shareText = addText(shareText, childContext.getString(R.string.contact_phone), cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_CONTACT_NUMBER)));
+        }
+
+        cursor.close();
+
+        return shareText;
+    }
     private void handleStatusSpinner() {
         Log.d(TAG, "handleStatusSpinner: **********************");
         final RelativeLayout dateSubmittedLayout = findViewById(R.id.dateSubmittedLayout);
@@ -325,7 +390,7 @@ public abstract class AddEntryActivity extends AppCompatActivity {
         });
     }
 
-
+    //turn remove dates into a single method
     public void removeDeadline(View view) {
         Toast.makeText(childContext, "Remove Deadline", Toast.LENGTH_SHORT).show();
         deadlineDateString = null;
@@ -340,12 +405,6 @@ public abstract class AddEntryActivity extends AppCompatActivity {
 
     private void setDeadlineDate() { //todo create separate class for handling calendar dialog
         CardView deadlineCardView = findViewById(R.id.deadlineAddDateCard);
-        Calendar calendar = Calendar.getInstance();
-
-        //this is the key to converting date format ?? give option in settings to change format. may change format in the databasse as well
-        //maybe just change the format when displaying the dates, not when saving the dates into the database
-        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getString(R.string.dateFormat), Locale.US);
-
         //todo add option to change date format
         deadlineDateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -365,49 +424,66 @@ public abstract class AddEntryActivity extends AppCompatActivity {
             }
         };
 
-        //if the entry is being updated and there is a deadline
-        if (currentUri != null && deadlineDateString != null) {//todo fix, enhance
-            try {
-                Date date = simpleDateFormat.parse(deadlineDateString);
-                calendar.setTime(date);
-                //deadlineDatePickerDialog.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                deadlineDatePickerDialog = new DatePickerDialog(childContext, android.R.style.Theme_DeviceDefault_Light_Dialog, deadlineDateListener,
-                        calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        } else { //if there is no deadline.
-            deadlineDatePickerDialog = new DatePickerDialog(childContext, android.R.style.Theme_DeviceDefault_Light_Dialog, deadlineDateListener,
-                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-        }
+        //I cannot make it work without usingaanoter class
+        MyCalendarDialog myCalendarDialog = new MyCalendarDialog(childContext, deadlineCardView, deadlineDateString,
+                deadlineDateTextView, currentUri, deadlineDateListener, simpleDateFormat);
+        deadlineDateString = myCalendarDialog.getDateString();
 
-        deadlineCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                deadlineDatePickerDialog.getWindow();
-                deadlineDatePickerDialog.show();
-            }
-        });
-        Log.d(TAG, "setDeadlineDate bottom: ************///////////////// deadlineDateString=" + deadlineDateString);
     }
-
 
     private void setDateSubmitted() {
         CardView dateSubmittedCardView = (CardView) findViewById(R.id.dateSubmittedCardView);
-        //todo add option to change date format
 
+        //todo add option to change date format
         dateSubmittedListener = new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker datePicker, int y, int m, int d) {
+            public void onDateSet(DatePicker datePicker, int y, int m, int d) { //todo add leading zeroes to months and days. no leading zeroes causes improper sorting
                 m += 1;
-                dateSubmittedString = m + "/" + d + "/" + y;
+                String temporaryDate = m + "/" + d + "/" + y;
+                try { //todo try to not use try catch
+                    Date tDate = simpleDateFormat.parse(temporaryDate); //converts into "MM/dd/yyyy" format first. maintains the leading zeroes
+                    dateSubmittedString = simpleDateFormat.format(tDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    Toast.makeText(childContext, "ParceException catched", Toast.LENGTH_SHORT).show();
+                    System.exit(1);
+                }
+                Toast.makeText(childContext, dateSubmittedString, Toast.LENGTH_SHORT).show();
                 dateSubmittedTextView.setText(dateSubmittedString);
             }
         };
 
-        MyCalendarDialog myCalendarDialog = new MyCalendarDialog(childContext, dateSubmittedCardView, dateSubmittedString, dateSubmittedTextView, currentUri, dateSubmittedListener);
+        MyCalendarDialog myCalendarDialog = new MyCalendarDialog(childContext, dateSubmittedCardView, dateSubmittedString, dateSubmittedTextView, currentUri, dateSubmittedListener, simpleDateFormat);
+        dateSubmittedString = myCalendarDialog.getDateString();
+
     }
 
+    private void setJobPostDate() {
+        CardView jobPostDateCardView = (CardView) findViewById(R.id.jobPostDateCardView);
+
+        //todo add option to change date format
+        jobPostDateListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int y, int m, int d) { //todo add leading zeroes to months and days. no leading zeroes causes improper sorting
+                m += 1;
+                String temporaryDate = m + "/" + d + "/" + y;
+                try { //todo try to not use try catch
+                    Date tDate = simpleDateFormat.parse(temporaryDate); //converts into "MM/dd/yyyy" format first. maintains the leading zeroes
+                    jobPostDateString = simpleDateFormat.format(tDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    Toast.makeText(childContext, "ParceException catched", Toast.LENGTH_SHORT).show();
+                    System.exit(1);
+                }
+                Toast.makeText(childContext, jobPostDateString, Toast.LENGTH_SHORT).show();
+                jobPostDateTextView.setText(jobPostDateString);
+            }
+        };
+
+        MyCalendarDialog myCalendarDialog = new MyCalendarDialog(childContext, jobPostDateCardView, jobPostDateString, jobPostDateTextView, currentUri, jobPostDateListener, simpleDateFormat);
+        jobPostDateString = myCalendarDialog.getDateString();
+
+    }
 
     //fills the fields with existing data from the database?
     private void fillExistingData() {
@@ -428,8 +504,6 @@ public abstract class AddEntryActivity extends AppCompatActivity {
         Cursor cursor = childContext.getContentResolver().query(FormsContract.FormEntryTable.CONTENT_URI, projection, selection, selectionArgs, null);
 
         if (cursor != null && cursor.moveToFirst()) { //does it need to have cursor != null?
-            nameEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_NAME)));
-
             deadlineDateString = cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_DEADLINE));
             if (deadlineDateString != null) {
                 Log.d(TAG, "fillExistingData: has deadline ****************///////////deadlineDateString=" + deadlineDateString);
@@ -444,7 +518,6 @@ public abstract class AddEntryActivity extends AppCompatActivity {
                 Log.d(TAG, "fillExistingData: has dateSubmitted ****************///////////dateSubmittedString=" + dateSubmittedString);
                 dateSubmittedTextView.setText(dateSubmittedString);
             } else {
-                Log.d(TAG, "fillExistingData: no deadlineDateString***** = " + deadlineDateString);
                 dateSubmittedTextView.setText(R.string.choose_date);
             }
 
@@ -467,6 +540,7 @@ public abstract class AddEntryActivity extends AppCompatActivity {
                     break;
             }
 
+            nameEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_NAME)));
             requirementEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_REQUIREMENTS)));
             descriptionEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_DESCRIPTION)));
             todoEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_TODO)));
@@ -477,26 +551,32 @@ public abstract class AddEntryActivity extends AppCompatActivity {
             contactNumberEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_CONTACT_NUMBER)));
 
             if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_SCHOLARSHIP)) {
-
                 companyEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_COMPANY)));
                 awardEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_SCHOLARSHIP_AWARD)));
             } else if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_COLLEGE)) {
                 aveCostEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_COLLEGE_AVE_COST)));
             } else if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_EMPLOYMENT)) {
 
+                jobPostDateString = cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_JOB_POST_DATE));
+                if (jobPostDateString != null) {
+                    Log.d(TAG, "fillExistingData: has deadline ****************///////////deadlineDateString=" + jobPostDateString);
+                    jobPostDateTextView.setText(jobPostDateString);
+                } else {
+                    Log.d(TAG, "fillExistingData: no deadlineDateString***** = " + jobPostDateString);
+                    jobPostDateTextView.setText(R.string.choose_date);
+                }
                 companyEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_COMPANY)));
                 jobTypeEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_JOB_TYPE)));
                 salaryEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_JOB_SALARY)));
-                jobPostDateEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_JOB_POST_DATE)));
             } else if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_OTHERS)) {
                 companyEditText.setText(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_COMPANY)));
             }
-
         }
 
         cursor.close();
         Log.d(TAG, "fillExistingData: cursor closed*********************");
     }
+
 
     //no leading zeroes causes improper sorting
     //hide keyboard when clicked outside edittext

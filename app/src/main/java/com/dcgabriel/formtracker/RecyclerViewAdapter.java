@@ -1,6 +1,8 @@
 package com.dcgabriel.formtracker;
 
 import android.content.Context;
+import android.content.Intent;
+import android.provider.CalendarContract;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,10 +13,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
-
     private static String TAG = "RecyclerViewAdapter";
     private Context mContext;
     private ArrayList<Forms> formsList;
@@ -66,6 +72,40 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 entryListener.editEntry(position);
             }
         });
+
+        holder.deadlineCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "onClick: *******************");
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(mContext.getString(R.string.dateFormat), Locale.US);
+
+                Date date;
+                Calendar cal = Calendar.getInstance();
+
+
+                try {
+                    date = simpleDateFormat.parse(formsList.get(position).getDeadline());
+                    cal.setTime(date);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    Toast.makeText(mContext, "ParceException catched", Toast.LENGTH_SHORT).show();
+                    System.exit(1);
+                }
+
+                Intent shareDate = new Intent(Intent.ACTION_INSERT);
+                shareDate.setData(CalendarContract.Events.CONTENT_URI);
+                shareDate.putExtra(CalendarContract.Events.TITLE, formsList.get(position).getName() + " application deadline");
+                shareDate.putExtra(CalendarContract.Events.DESCRIPTION, "TEST");
+
+                //if there is a deadline
+                if (!(formsList.get(position).getDeadline().isEmpty() || formsList.get(position).getDeadline() == null)) {
+                    shareDate.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, cal.getTimeInMillis());
+                    shareDate.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, cal.getTimeInMillis());
+                    shareDate.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true);
+                }
+                mContext.startActivity(shareDate);
+            }
+        });
     }
 
     @Override
@@ -98,3 +138,5 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
 }
+
+//todo limit TextViews to certain length

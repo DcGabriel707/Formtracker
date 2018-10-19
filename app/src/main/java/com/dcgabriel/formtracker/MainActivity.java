@@ -1,8 +1,6 @@
 package com.dcgabriel.formtracker;
 
 import android.content.Intent;
-import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -70,9 +68,7 @@ public class MainActivity extends AppCompatActivity {
         switch (id) {
             case (R.id.action_more):
                 Toast.makeText(MainActivity.this, "Settings", Toast.LENGTH_SHORT).show();
-                PopupMenu dropDownMenu = new PopupMenu(MainActivity.this, findViewById(R.id.action_more));
-                dropDownMenu.getMenuInflater().inflate(R.menu.more_menu, dropDownMenu.getMenu());
-                dropDownMenu.show();
+                showMoreMenu();
                 break;
             case (R.id.action_refresh):
                 Toast.makeText(MainActivity.this, "Refreshing", Toast.LENGTH_SHORT).show();
@@ -86,6 +82,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showMoreMenu() {
+        PopupMenu dropDownMenu = new PopupMenu(MainActivity.this, findViewById(R.id.action_more));
+        dropDownMenu.getMenuInflater().inflate(R.menu.more_menu, dropDownMenu.getMenu());
+
+        dropDownMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case (R.id.action_settings):
+                        Intent settings = new Intent(MainActivity.this, Settings.class);
+                        startActivity(settings);
+                        return true;
+                    case (R.id.action_about):
+                        Intent aboutPage = new Intent(MainActivity.this, AboutPage.class);
+                        startActivity(aboutPage);
+                        return true;
+                }
+                return false;
+            }
+        });
+        dropDownMenu.show();
     }
 
     private void showSortMenu() {
@@ -129,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
         tabAdapter.addFragment(new CollegeTabFragment(), "College");
         tabAdapter.addFragment(new EmploymentTabFragment(), "Job");
         tabAdapter.addFragment(new OthersTabFragment(), "Other");
-
         viewPager.setAdapter(tabAdapter);
         tabLayout.setupWithViewPager(viewPager);
         //test

@@ -76,6 +76,7 @@
                             android:inputType="textCapWords" />
                     </android.support.v7.widget.CardView>
 
+
                     <TextView
                         style="@style/addEntryTextView"
                         android:text="@string/salary" />
@@ -84,21 +85,61 @@
 
                         <EditText
                             android:id="@+id/salaryEditText"
-                            style="@style/addEntryEditText"
-                            android:inputType="numberDecimal" />
+                            style="@style/addEntryEditText" />
                     </android.support.v7.widget.CardView>
 
-                    <TextView
-                        style="@style/addEntryTextView"
-                        android:text="@string/job_post_date" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                    <android.support.v7.widget.CardView style="@style/addEntryEditTextCard">
+                        <TextView
+                            style="@style/addEntryTextView"
+                            android:text="@string/job_post_date" />
 
-                        <EditText
-                            android:id="@+id/jobPostDateEditText"
-                            style="@style/addEntryEditText"
-                            android:inputType="datetime" />
-                    </android.support.v7.widget.CardView>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginLeft="20dp"
+                            android:orientation="horizontal">
+
+
+                            <android.support.v7.widget.CardView
+                                android:id="@+id/jobPostDateCardView"
+                                style="@style/smallerCardViewInsideCardView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:stateListAnimator="@animator/button_elevate"
+                                app:cardUseCompatPadding="true">
+
+                                <TextView
+                                    android:id="@+id/jobPostDateTextView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="@dimen/defaultTextViewMargin"
+                                    android:text="@string/choose_date"
+                                    android:textSize="16sp" />
+                            </android.support.v7.widget.CardView>
+
+
+                            <android.support.v7.widget.CardView
+                                android:id="@+id/removeJobPostCardView"
+                                style="@style/smallerCardViewInsideCardView"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_gravity="center"
+                                android:onClick="removeJobPostDate"
+                                android:stateListAnimator="@animator/button_elevate">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_clear_grey_24dp" />
+                            </android.support.v7.widget.CardView>
+
+                        </LinearLayout>
+                    </RelativeLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
