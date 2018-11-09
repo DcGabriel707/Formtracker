@@ -244,9 +244,5 @@ public class MainActivity extends AppCompatActivity {
 
 
 //todo make multiple fragment for landscape mode
-//todo should i put FAB on each tab fragments or just on main activity?
 //todo add notification
-//todo add action. when user click on the deadline, calendar will be opened
-// FAB on each fragment is not properly appearing when toolbar is collapsed. FAB on each fragment can have good transition animation. FAB on Main activity requires more code, need to call fragment.onActivityResult for each tab
 // todo change all icons to rounded icons
-//todo sorting  deadline is not working properly.

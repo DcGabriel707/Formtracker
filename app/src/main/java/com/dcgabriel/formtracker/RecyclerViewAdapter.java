@@ -138,5 +138,3 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
 }
-
-//todo limit TextViews to certain length

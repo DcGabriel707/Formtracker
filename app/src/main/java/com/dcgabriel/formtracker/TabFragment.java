@@ -134,7 +134,6 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
         } else if (formType.equals(FormEntryTable.FORM_TYPE_EMPLOYMENT)) {
             shortDetail = FormEntryTable.COLUMN_JOB_TYPE;
         } else if (formType.equals(FormEntryTable.FORM_TYPE_OTHERS)) {
-            //todo fix
             shortDetail = FormEntryTable.COLUMN_LOCATION;
         } else {
             shortDetail = "..."; //for debugging
@@ -288,4 +287,3 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
 
 
 //todo change view to/from emptyview dynamically
-//

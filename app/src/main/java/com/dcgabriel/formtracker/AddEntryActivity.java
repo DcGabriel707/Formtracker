@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -54,19 +55,20 @@ public abstract class AddEntryActivity extends AppCompatActivity {
 
     private DatePickerDialog.OnDateSetListener deadlineDateListener;
     private DatePickerDialog.OnDateSetListener dateSubmittedListener;
-    protected String jobPostDateString; //accessed from the add employmeny activity
-    private String deadlineDateString;
-    private String dateSubmittedString;
+    protected String jobPostDateString; //this should be the string used when modifying/retrieving the date from the database
+    private String deadlineDateString; //this should be the string used when modifying/retrieving the date from the database
+    private String dateSubmittedString; //this should be the string used when modifying/retrieving the date from the database
     protected TextView jobPostDateTextView;
     private DatePickerDialog.OnDateSetListener jobPostDateListener;
-
 
     protected Context childContext;
     protected String formType;
     private Intent intent;
     private Uri currentUri;
     private ContentValues values;
-    private SimpleDateFormat simpleDateFormat;
+    private SimpleDateFormat simpleDateFormat; // default date format. All dates stored in the database is in this format (MM/dd/yyyy)
+    private SimpleDateFormat preferredDateFormat; // preferred date format set from the settings. This is the one used when dates are printed
+    private String myDateFormat;
 
     protected abstract int getLayoutId();
 
@@ -81,7 +83,7 @@ public abstract class AddEntryActivity extends AppCompatActivity {
         handleFindViewByIds();
 
 
-        //handles the status spinner. string arrays found in strings.xml todo maybe put handle all spinner in a separate class
+        //handles the status spinner. string arrays found in strings.xml
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(childContext, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.statusList));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         statusSpinner.setAdapter(adapter);
@@ -132,14 +134,20 @@ public abstract class AddEntryActivity extends AppCompatActivity {
             });
         }
 
-        //this is the key to converting date format ?? give option in settings to change format. may change format in the databasse as well
+
+        //retrieves the string format from sharedPreference
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
+        myDateFormat = sharedPreferences.getString("DateFormat", "");
+
+        //sets the date format
         //maybe just change the format when displaying the dates, not when saving the dates into the database
-        simpleDateFormat = new SimpleDateFormat(getString(R.string.dateFormat), Locale.US);
+        simpleDateFormat = new SimpleDateFormat(getString(R.string.dateFormat), Locale.US); // somehow setting to a different order does not work.
+        preferredDateFormat = new SimpleDateFormat(myDateFormat);//this is the key to converting date format
         //handles the deadline date. called again to update with existing date
         setDeadlineDate();
         //handles the date submitted
         setDateSubmitted();
-        //
+
         if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_EMPLOYMENT)) {
             setJobPostDate();
         }
@@ -357,6 +365,7 @@ public abstract class AddEntryActivity extends AppCompatActivity {
 
         return shareText;
     }
+
     private void handleStatusSpinner() {
         Log.d(TAG, "handleStatusSpinner: **********************");
         final RelativeLayout dateSubmittedLayout = findViewById(R.id.dateSubmittedLayout);
@@ -403,23 +412,25 @@ public abstract class AddEntryActivity extends AppCompatActivity {
         dateSubmittedTextView.setText(R.string.choose_date);
     }
 
-    private void setDeadlineDate() { //todo create separate class for handling calendar dialog
+    private void setDeadlineDate() {
         CardView deadlineCardView = findViewById(R.id.deadlineAddDateCard);
         //todo add option to change date format
         deadlineDateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker datePicker, int y, int m, int d) { //todo add leading zeroes to months and days. no leading zeroes causes improper sorting
+            public void onDateSet(DatePicker datePicker, int y, int m, int d) {// no leading zeroes causes improper sorting
                 m += 1;
                 String temporaryDate = m + "/" + d + "/" + y;
                 try { //todo try to not use try catch
                     Date tDate = simpleDateFormat.parse(temporaryDate); //converts into "MM/dd/yyyy" format first. maintains the leading zeroes
                     deadlineDateString = simpleDateFormat.format(tDate);
+                    //dates will be set on the preferred format before printing
+
                 } catch (ParseException e) {
                     e.printStackTrace();
                     Toast.makeText(childContext, "ParceException catched", Toast.LENGTH_SHORT).show();
                     System.exit(1);
                 }
-                Toast.makeText(childContext, deadlineDateString, Toast.LENGTH_SHORT).show();
+
                 deadlineDateTextView.setText(deadlineDateString);
             }
         };
@@ -437,7 +448,7 @@ public abstract class AddEntryActivity extends AppCompatActivity {
         //todo add option to change date format
         dateSubmittedListener = new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker datePicker, int y, int m, int d) { //todo add leading zeroes to months and days. no leading zeroes causes improper sorting
+            public void onDateSet(DatePicker datePicker, int y, int m, int d) { //no leading zeroes causes improper sorting
                 m += 1;
                 String temporaryDate = m + "/" + d + "/" + y;
                 try { //todo try to not use try catch
@@ -464,7 +475,7 @@ public abstract class AddEntryActivity extends AppCompatActivity {
         //todo add option to change date format
         jobPostDateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onDateSet(DatePicker datePicker, int y, int m, int d) { //todo add leading zeroes to months and days. no leading zeroes causes improper sorting
+            public void onDateSet(DatePicker datePicker, int y, int m, int d) { // no leading zeroes causes improper sorting
                 m += 1;
                 String temporaryDate = m + "/" + d + "/" + y;
                 try { //todo try to not use try catch

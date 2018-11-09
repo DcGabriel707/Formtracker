@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Form Tracker</string>
+    <string name="app_name">Axcept</string>
     <string name="action_settings">Settings</string>
     <string name="name">Name</string>
     <string name="addPageTitle">Enter application details</string>

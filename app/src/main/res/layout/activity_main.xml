@@ -41,8 +41,6 @@
         app:tabIndicatorColor="#ffffff"
         app:tabMode="fixed"
         app:tabTextColor="#ffffff" />
-    <!--todo center the tablayout-->
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/mainAddFab"
         android:layout_width="wrap_content"
@@ -50,7 +48,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:layout_marginBottom="32dp"
         android:stateListAnimator="@animator/button_elevate2"
-        app:backgroundTint="#2979ff"
+        app:backgroundTint="#448aff"
         app:layout_anchor="@id/tabLayoutId"
         app:layout_anchorGravity="center|top"
         app:srcCompat="@drawable/ic_add_black_24dp" />

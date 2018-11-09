@@ -5,15 +5,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-   >
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="12dp"
         android:layout_marginLeft="12dp"
         android:layout_marginTop="4dp"
+        android:layout_marginRight="12dp"
         android:clickable="true"
         android:elevation="6dp"
         android:focusable="true"
@@ -32,12 +31,12 @@
             <TextView
                 android:id="@+id/entryCardNameTextView"
                 android:layout_width="match_parent"
-                android:layout_toStartOf="@id/entryDeadlineCardView"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:text="@string/name"
+                android:layout_toStartOf="@id/entryDeadlineCardView"
                 android:paddingBottom="4dp"
+                android:text="@string/name"
                 android:textColor="#616161"
                 android:textSize="@dimen/entry_card_name_size" />
 
@@ -45,20 +44,22 @@
             <TextView
                 android:id="@+id/entryCardCompanyTextView"
                 android:layout_width="match_parent"
-                android:layout_toStartOf="@id/entryDeadlineCardView"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/entryCardNameTextView"
+                android:layout_toStartOf="@id/entryDeadlineCardView"
                 android:paddingBottom="4dp"
-                android:text="Company/Location" />
+                android:text="Company/Location"
+                android:textSize="@dimen/smallTextViewEntryCard" />
 
             <TextView
                 android:id="@+id/entryCardDetailsTextView"
                 android:layout_width="match_parent"
-                android:layout_marginBottom="14dp"
                 android:layout_height="wrap_content"
-                android:layout_toStartOf="@id/entryDeadlineCardView"
                 android:layout_below="@id/entryCardCompanyTextView"
-                android:text="@string/details" />
+                android:layout_marginBottom="14dp"
+                android:layout_toStartOf="@id/entryDeadlineCardView"
+                android:text="@string/details"
+                android:textSize="@dimen/smallTextViewEntryCard" />
 
             <android.support.v7.widget.CardView
                 android:id="@+id/entryDeadlineCardView"
@@ -76,20 +77,22 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/defaultTextViewMargin"
                     android:text="@string/deadline"
-                    android:textColor="@color/secondaryTextColor" />
+                    android:textColor="@color/secondaryTextColor"
+                    android:textSize="@dimen/smallTextViewEntryCard" />
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
                 style="@style/smallerCardViewInsideCardView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
                 android:layout_below="@id/entryDeadlineCardView"
+                android:layout_alignParentEnd="true"
                 android:layout_marginBottom="12dp"
                 android:foreground="?attr/selectableItemBackground"
                 android:stateListAnimator="@animator/button_elevate">
 
                 <TextView
+                    android:textSize="@dimen/smallTextViewEntryCard"
                     android:id="@+id/entryCardStatusTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
