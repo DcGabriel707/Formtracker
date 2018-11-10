@@ -31,6 +31,8 @@
     <string name="contact_phone">Contact Phone</string>
     <string name="about">About</string>
     <string name="dateFormat">MM/dd/yyyy</string>
+    <string name="ddMMyyyy">dd/MM/yyyy</string>
+    <string name="MMddyyyy">MM/dd/yyyy</string>
     <string name="average_cost">Average Cost</string>
     <string name="job_title">Job Title</string>
     <string name="address">Address</string>

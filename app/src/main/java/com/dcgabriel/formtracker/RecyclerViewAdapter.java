@@ -2,6 +2,7 @@ package com.dcgabriel.formtracker;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.provider.CalendarContract;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private static String TAG = "RecyclerViewAdapter";
@@ -49,20 +52,37 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(ViewHolder holder, final int position) { //called everytime a new item on the list is created. binds the data to the layout?
         Log.d(TAG, "onBindViewHolder: **********************************");
 
-        holder.nameTextView.setText(formsList.get(position).getName());
-        holder.companyTextView.setText(formsList.get(position).getCompany());
-        holder.detailsTextView.setText(formsList.get(position).getDetails());
-        holder.deadlineTextView.setText(formsList.get(position).getDeadline());
-        holder.statusTextView.setText(formsList.get(position).getStatus());
+
+        String deadline = formsList.get(position).getDeadline();
 
         //if deadline is empty
         if ((formsList.get(position).getDeadline() == null) || (formsList.get(position).getDeadline().equals(""))) {
             Log.d(TAG, "onBindViewHolder: before setting deadline to invisible****************");
-            holder.deadlineTextView.setText(R.string.noDeadline);
+            deadline = mContext.getString(R.string.noDeadline);
 
             //holder.deadlineCardView.setVisibility(View.INVISIBLE); //hides the deadlineCardView
             //holder.relativeLayoutCardView.removeView(holder.deadlineCardView); //removes the deadlineCardView. the status Card will replace
+        } else {
+            //sets the preferred date format
+            SharedPreferences sharedPreferences = mContext.getSharedPreferences("Settings", MODE_PRIVATE);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(mContext.getString(R.string.MMddyyyy), Locale.US);
+            SimpleDateFormat preferredDateFormat = new SimpleDateFormat(sharedPreferences.getString("DateFormat", ""), Locale.US);
+            try {
+                Date date = simpleDateFormat.parse(deadline);
+                deadline = preferredDateFormat.format(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                Toast.makeText(mContext, "ParceException catched", Toast.LENGTH_SHORT).show();
+                System.exit(1);
+            }
         }
+
+        holder.nameTextView.setText(formsList.get(position).getName());
+        holder.companyTextView.setText(formsList.get(position).getCompany());
+        holder.detailsTextView.setText(formsList.get(position).getDetails());
+        holder.deadlineTextView.setText(deadline);
+        holder.statusTextView.setText(formsList.get(position).getStatus());
+
 
         //handles clicks on recycler view entry
         holder.relativeLayoutCardView.setOnClickListener(new View.OnClickListener() {

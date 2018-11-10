@@ -30,11 +30,11 @@ public class Settings extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 if (position == 0) { //if mm/dd/yyyy is selected
-                    dateFormat = "mm/dd/yyyy";
+                    dateFormat = getString(R.string.MMddyyyy);
                     saveSharedPreference();
                     loadSharedPreference(); //for debugging
                 } else if (position == 1) { //if dd/mm/yyyy is selected
-                    dateFormat = "dd/mm/yyyy";
+                    dateFormat = getString(R.string.ddMMyyyy);
                     saveSharedPreference();
                     loadSharedPreference(); //dddddddddddddddddddddddddddddddddddddddfor debugging
                 }
@@ -63,7 +63,7 @@ public class Settings extends AppCompatActivity {
 
         Toast.makeText(this, loadedDateFormat, Toast.LENGTH_SHORT).show();
 
-        if (loadedDateFormat == "mm/dd/yyyy")
+        if (loadedDateFormat.equals(getString(R.string.MMddyyyy)))
             dateFormatSpinner.setSelection(0);
         else
             dateFormatSpinner.setSelection(1);

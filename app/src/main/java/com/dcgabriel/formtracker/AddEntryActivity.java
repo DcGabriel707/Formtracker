@@ -56,9 +56,13 @@ public abstract class AddEntryActivity extends AppCompatActivity {
     private DatePickerDialog.OnDateSetListener deadlineDateListener;
     private DatePickerDialog.OnDateSetListener dateSubmittedListener;
     protected String jobPostDateString; //this should be the string used when modifying/retrieving the date from the database
+    private String jobPostDatePreferredFormat;
     private String deadlineDateString; //this should be the string used when modifying/retrieving the date from the database
+    private String deadlinePreferredFormat; // used for displaying deadline string. uses the preferred date format set from the settings
     private String dateSubmittedString; //this should be the string used when modifying/retrieving the date from the database
+    private String dateSubmissionPreferredFormat; // used for displaying deadline string. uses the preferred date format set from the settings
     protected TextView jobPostDateTextView;
+
     private DatePickerDialog.OnDateSetListener jobPostDateListener;
 
     protected Context childContext;
@@ -67,7 +71,8 @@ public abstract class AddEntryActivity extends AppCompatActivity {
     private Uri currentUri;
     private ContentValues values;
     private SimpleDateFormat simpleDateFormat; // default date format. All dates stored in the database is in this format (MM/dd/yyyy)
-    private SimpleDateFormat preferredDateFormat; // preferred date format set from the settings. This is the one used when dates are printed
+    private SimpleDateFormat preferredDateFormat;  // preferred date format set from the settings. This is the one used when dates are printed
+    private String preferredDateFormatString;
     private String myDateFormat;
 
     protected abstract int getLayoutId();
@@ -95,6 +100,20 @@ public abstract class AddEntryActivity extends AppCompatActivity {
         //handle status spinner and date submitted
         handleStatusSpinner();
 
+        //retrieves the string format from sharedPreference
+        //preferredDateFormat must be initialized before fillExistingData()
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
+        preferredDateFormatString = sharedPreferences.getString("DateFormat", "");
+
+        //sets the date format
+        //maybe just change the format when displaying the dates, not when saving the dates into the database
+        simpleDateFormat = new SimpleDateFormat(getString(R.string.MMddyyyy), Locale.US); // somehow setting to a different order does not work.
+        if (preferredDateFormatString.equals(getString(R.string.MMddyyyy))) {
+            preferredDateFormat = simpleDateFormat;
+        } else if (preferredDateFormatString.equals(getString(R.string.ddMMyyyy))) {
+            preferredDateFormat = new SimpleDateFormat(preferredDateFormatString, Locale.US); // somehow setting to a different order does not work.
+        }
+
         //if an entry is being edited, or when the user clicked on the cardView. Not working if i put these findviewbyids on another method
         FloatingActionButton fabAdd = findViewById(R.id.add_entry_add_fab);
         CardView deleteButton = findViewById(R.id.deleteButton);
@@ -115,7 +134,6 @@ public abstract class AddEntryActivity extends AppCompatActivity {
                     updateEntryButton();
                 }
             });
-
             shareButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -135,14 +153,6 @@ public abstract class AddEntryActivity extends AppCompatActivity {
         }
 
 
-        //retrieves the string format from sharedPreference
-        SharedPreferences sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
-        myDateFormat = sharedPreferences.getString("DateFormat", "");
-
-        //sets the date format
-        //maybe just change the format when displaying the dates, not when saving the dates into the database
-        simpleDateFormat = new SimpleDateFormat(getString(R.string.dateFormat), Locale.US); // somehow setting to a different order does not work.
-        preferredDateFormat = new SimpleDateFormat(myDateFormat);//this is the key to converting date format
         //handles the deadline date. called again to update with existing date
         setDeadlineDate();
         //handles the date submitted
@@ -414,45 +424,42 @@ public abstract class AddEntryActivity extends AppCompatActivity {
 
     private void setDeadlineDate() {
         CardView deadlineCardView = findViewById(R.id.deadlineAddDateCard);
-        //todo add option to change date format
         deadlineDateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int y, int m, int d) {// no leading zeroes causes improper sorting
                 m += 1;
-                String temporaryDate = m + "/" + d + "/" + y;
+                String dateWithoutLeadingZero = m + "/" + d + "/" + y;
+                //dates will be set on the preferred format before printing
+                deadlinePreferredFormat = toPreferredDateFormat(dateWithoutLeadingZero);
                 try { //todo try to not use try catch
-                    Date tDate = simpleDateFormat.parse(temporaryDate); //converts into "MM/dd/yyyy" format first. maintains the leading zeroes
+                    Date tDate = simpleDateFormat.parse(dateWithoutLeadingZero); //converts into "MM/dd/yyyy" format first. using the simpleDateFormat maintains the leading zeroes. Leading zeroes are used for sorting
                     deadlineDateString = simpleDateFormat.format(tDate);
-                    //dates will be set on the preferred format before printing
-
                 } catch (ParseException e) {
                     e.printStackTrace();
                     Toast.makeText(childContext, "ParceException catched", Toast.LENGTH_SHORT).show();
                     System.exit(1);
                 }
-
-                deadlineDateTextView.setText(deadlineDateString);
+                deadlineDateTextView.setText(deadlinePreferredFormat);
             }
         };
-
-        //I cannot make it work without usingaanoter class
+        //I cannot make it work without using another class
         MyCalendarDialog myCalendarDialog = new MyCalendarDialog(childContext, deadlineCardView, deadlineDateString,
                 deadlineDateTextView, currentUri, deadlineDateListener, simpleDateFormat);
         deadlineDateString = myCalendarDialog.getDateString();
-
     }
+
 
     private void setDateSubmitted() {
         CardView dateSubmittedCardView = (CardView) findViewById(R.id.dateSubmittedCardView);
-
-        //todo add option to change date format
         dateSubmittedListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int y, int m, int d) { //no leading zeroes causes improper sorting
                 m += 1;
-                String temporaryDate = m + "/" + d + "/" + y;
+                String dateWithoutLeadingZero = m + "/" + d + "/" + y;
+                //dates will be set on the preferred format before printing
+                dateSubmissionPreferredFormat = toPreferredDateFormat(dateWithoutLeadingZero);
                 try { //todo try to not use try catch
-                    Date tDate = simpleDateFormat.parse(temporaryDate); //converts into "MM/dd/yyyy" format first. maintains the leading zeroes
+                    Date tDate = simpleDateFormat.parse(dateWithoutLeadingZero); //converts into "MM/dd/yyyy" format first. maintains the leading zeroes
                     dateSubmittedString = simpleDateFormat.format(tDate);
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -460,7 +467,7 @@ public abstract class AddEntryActivity extends AppCompatActivity {
                     System.exit(1);
                 }
                 Toast.makeText(childContext, dateSubmittedString, Toast.LENGTH_SHORT).show();
-                dateSubmittedTextView.setText(dateSubmittedString);
+                dateSubmittedTextView.setText(dateSubmissionPreferredFormat);
             }
         };
 
@@ -471,15 +478,15 @@ public abstract class AddEntryActivity extends AppCompatActivity {
 
     private void setJobPostDate() {
         CardView jobPostDateCardView = (CardView) findViewById(R.id.jobPostDateCardView);
-
-        //todo add option to change date format
         jobPostDateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int y, int m, int d) { // no leading zeroes causes improper sorting
                 m += 1;
-                String temporaryDate = m + "/" + d + "/" + y;
+                String dateWithoutLeadingZero = m + "/" + d + "/" + y;
+                //dates will be set on the preferred format before printing
+                jobPostDatePreferredFormat = toPreferredDateFormat(dateWithoutLeadingZero);
                 try { //todo try to not use try catch
-                    Date tDate = simpleDateFormat.parse(temporaryDate); //converts into "MM/dd/yyyy" format first. maintains the leading zeroes
+                    Date tDate = simpleDateFormat.parse(dateWithoutLeadingZero); //converts into "MM/dd/yyyy" format first. maintains the leading zeroes
                     jobPostDateString = simpleDateFormat.format(tDate);
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -487,12 +494,28 @@ public abstract class AddEntryActivity extends AppCompatActivity {
                     System.exit(1);
                 }
                 Toast.makeText(childContext, jobPostDateString, Toast.LENGTH_SHORT).show();
-                jobPostDateTextView.setText(jobPostDateString);
+                jobPostDateTextView.setText(jobPostDatePreferredFormat);
             }
         };
 
         MyCalendarDialog myCalendarDialog = new MyCalendarDialog(childContext, jobPostDateCardView, jobPostDateString, jobPostDateTextView, currentUri, jobPostDateListener, simpleDateFormat);
         jobPostDateString = myCalendarDialog.getDateString();
+
+    }
+
+    //converts date string into preferred date format. Must only be used when displaying date strings not when modifying database.
+    private String toPreferredDateFormat(String unformattedDateString) {
+        String formattedDate = "   ";
+        try { // cannot find away to parse simpleDateFormat without using try catch
+            Date date = simpleDateFormat.parse(unformattedDateString);
+            formattedDate = preferredDateFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Toast.makeText(childContext, "ParceException catched", Toast.LENGTH_SHORT).show();
+            System.exit(1);
+        }
+
+        return formattedDate;
 
     }
 
@@ -518,7 +541,7 @@ public abstract class AddEntryActivity extends AppCompatActivity {
             deadlineDateString = cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_DEADLINE));
             if (deadlineDateString != null) {
                 Log.d(TAG, "fillExistingData: has deadline ****************///////////deadlineDateString=" + deadlineDateString);
-                deadlineDateTextView.setText(deadlineDateString);
+                deadlineDateTextView.setText(toPreferredDateFormat(deadlineDateString)); //todo fixxxxxxxxx
             } else {
                 Log.d(TAG, "fillExistingData: no deadlineDateString***** = " + deadlineDateString);
                 deadlineDateTextView.setText(R.string.noDeadline);
@@ -527,7 +550,7 @@ public abstract class AddEntryActivity extends AppCompatActivity {
             dateSubmittedString = cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_DATE_SUBMITTED));
             if (dateSubmittedString != null) {
                 Log.d(TAG, "fillExistingData: has dateSubmitted ****************///////////dateSubmittedString=" + dateSubmittedString);
-                dateSubmittedTextView.setText(dateSubmittedString);
+                dateSubmittedTextView.setText(toPreferredDateFormat(dateSubmittedString));
             } else {
                 dateSubmittedTextView.setText(R.string.choose_date);
             }
@@ -571,7 +594,7 @@ public abstract class AddEntryActivity extends AppCompatActivity {
                 jobPostDateString = cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_JOB_POST_DATE));
                 if (jobPostDateString != null) {
                     Log.d(TAG, "fillExistingData: has deadline ****************///////////deadlineDateString=" + jobPostDateString);
-                    jobPostDateTextView.setText(jobPostDateString);
+                    jobPostDateTextView.setText(toPreferredDateFormat(jobPostDateString));
                 } else {
                     Log.d(TAG, "fillExistingData: no deadlineDateString***** = " + jobPostDateString);
                     jobPostDateTextView.setText(R.string.choose_date);
