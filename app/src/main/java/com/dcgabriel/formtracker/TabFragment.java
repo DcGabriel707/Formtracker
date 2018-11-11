@@ -43,10 +43,7 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
         formsArrayList = new ArrayList<>();
         addEntriesIntoList();
         handleRecyclerView();
-
-        if (formsArrayList.isEmpty()) {
-            view = inflater.inflate(R.layout.temporary_empty_view, parentContainer, false);
-        }
+        setEmptyView();
         return view;
     }
 
@@ -55,26 +52,12 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
     protected void handleRecyclerView() {
         Log.d(TAG, "handleRecyclerView: *********************************");
         RecyclerView recyclerView;
-        if (formType.equals(FormEntryTable.FORM_TYPE_SCHOLARSHIP)) {
-            recyclerView = view.findViewById(R.id.recyclerViewScholarshipFragment);
-        } else if (formType.equals(FormEntryTable.FORM_TYPE_COLLEGE)) {
-            recyclerView = view.findViewById(R.id.recyclerViewCollegeFragment);
-        } else if (formType.equals(FormEntryTable.FORM_TYPE_EMPLOYMENT)) {
-            recyclerView = view.findViewById(R.id.recyclerViewEmploymentFragment);
-        } else if (formType.equals(FormEntryTable.FORM_TYPE_OTHERS)) {
-            recyclerView = view.findViewById(R.id.recyclerViewOthersFragment);
-        } else {
-            recyclerView = view.findViewById(R.id.recyclerViewScholarshipFragment);
-        }
-
         System.out.println(childContext.toString());
-
+        recyclerView = view.findViewById(R.id.recyclerView);
         adapter = new RecyclerViewAdapter(childContext, this, formsArrayList);
-
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(childContext));
-
     }
 
     @Override
@@ -82,26 +65,23 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
         //super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "onActivityResult: called****************************");
 
-
         final int ACTION_UPDATED = 1;
         final int ACTION_DELETED = 2;
         Toast.makeText(childContext, "onActivityResult from " + formType, Toast.LENGTH_SHORT).show();
         if (resultCode == Activity.RESULT_OK) {
+            updateLists();
             switch (requestCode) {
                 case ADD_ITEM_REQUEST: //when the addFab was clicked
-                    updateLists();
                     adapter.notifyItemInserted(adapter.getItemCount());
                     Toast.makeText(childContext, "onActivityResult Received. Entry inserted", Toast.LENGTH_SHORT).show();
                     break;
                 case UPDATE_ITEM_REQUEST: //when a specific CardView entry is clicked from the recyclerview
-                    updateLists();
                     int pos = data.getIntExtra("position", -1); // gets the position of the entry being updated/deleted
                     int action = data.getIntExtra("action", -1); //tells if the entry will be updated or deleted
                     if (action == ACTION_UPDATED) {
                         formsArrayList.clear();
                         addEntriesIntoList();
                         adapter.notifyItemChanged(pos);
-
                         Toast.makeText(childContext, "onActivityResult Received. Entry updated. Position = " + pos, Toast.LENGTH_SHORT).show();
                     } else if (action == ACTION_DELETED) {
                         adapter.notifyItemRemoved(pos);
@@ -110,16 +90,27 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
                         adapter.notifyDataSetChanged();
                     break;
                 default:
-                    updateLists();
                     adapter.notifyDataSetChanged();
                     Toast.makeText(childContext, "onActivityResult Received. All entries updated. notifyDataSetChanged called", Toast.LENGTH_SHORT).show();
                     break;
             }
+            setEmptyView();
+        }
+    }
 
+    //check if list is empty and applies the empty view
+    private void setEmptyView() {
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        View emptyLayoutView = view.findViewById(R.id.emptyView);
+        if (formsArrayList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyLayoutView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyLayoutView.setVisibility(View.GONE);
         }
 
     }
-
 
     protected void addEntriesIntoList() {
         Log.d(TAG, "addEntriesIntoList: ************");
@@ -151,8 +142,6 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
         String selection = FormsContract.FormEntryTable.COLUMN_TYPE + "=?";
         String[] selectionArgs = {formType};
 
-        //TODO fix app is crashing when nothing is added to a list.
-
         //new code. context is added on my own
         Cursor cursor = childContext.getContentResolver().query(FormsContract.FormEntryTable.CONTENT_URI, projection, selection, selectionArgs, null);
         Log.d(TAG, "addEntriesIntoList: cursor created******************************");
@@ -177,7 +166,6 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
     }
 
     public void updateLists() {
-        //Toast.makeText(childContext, "updateList()", Toast.LENGTH_SHORT).show();
         formsArrayList.clear();
         addEntriesIntoList();
         // handleRecyclerView();
@@ -222,7 +210,7 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
         }
         editEntry.setData(formsArrayList.get(pos).getUri());
         editEntry.putExtra("_id", Integer.toString(formsArrayList.get(pos).getId()));//passes the id to the add_entry.
-        editEntry.putExtra("position", pos); //todo try this. change to int??
+        editEntry.putExtra("position", pos);
         startActivityForResult(editEntry, UPDATE_ITEM_REQUEST);
 
     }
@@ -232,8 +220,6 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
     public void refreshButton() {
         updateLists();
         adapter.notifyDataSetChanged();
-        Toast.makeText(childContext, adapter.getItemCount() + " ", Toast.LENGTH_SHORT).show();
-
     }
 
     @Override
@@ -284,6 +270,3 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
     }
 
 }
-
-
-//todo change view to/from emptyview dynamically

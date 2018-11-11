@@ -18,6 +18,7 @@ public class AboutPage extends AppCompatActivity {
         setContentView(R.layout.activity_about_page);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         sendFeedbackCardView = findViewById(R.id.sendFeedbackCardView);
         sendFeedbackCardView.setOnClickListener(new View.OnClickListener() {
@@ -29,7 +30,6 @@ public class AboutPage extends AppCompatActivity {
                 sendFeedback.putExtra(Intent.EXTRA_EMAIL, "gcarapplications@gmail.com");
                 sendFeedback.putExtra(Intent.EXTRA_SUBJECT, "Axcept feedback");
                 startActivity(sendFeedback);
-
             }
         });
     }

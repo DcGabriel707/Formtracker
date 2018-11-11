@@ -431,7 +431,7 @@ public abstract class AddEntryActivity extends AppCompatActivity {
                 String dateWithoutLeadingZero = m + "/" + d + "/" + y;
                 //dates will be set on the preferred format before printing
                 deadlinePreferredFormat = toPreferredDateFormat(dateWithoutLeadingZero);
-                try { //todo try to not use try catch
+                try {
                     Date tDate = simpleDateFormat.parse(dateWithoutLeadingZero); //converts into "MM/dd/yyyy" format first. using the simpleDateFormat maintains the leading zeroes. Leading zeroes are used for sorting
                     deadlineDateString = simpleDateFormat.format(tDate);
                 } catch (ParseException e) {
@@ -458,7 +458,7 @@ public abstract class AddEntryActivity extends AppCompatActivity {
                 String dateWithoutLeadingZero = m + "/" + d + "/" + y;
                 //dates will be set on the preferred format before printing
                 dateSubmissionPreferredFormat = toPreferredDateFormat(dateWithoutLeadingZero);
-                try { //todo try to not use try catch
+                try {
                     Date tDate = simpleDateFormat.parse(dateWithoutLeadingZero); //converts into "MM/dd/yyyy" format first. maintains the leading zeroes
                     dateSubmittedString = simpleDateFormat.format(tDate);
                 } catch (ParseException e) {
@@ -485,7 +485,7 @@ public abstract class AddEntryActivity extends AppCompatActivity {
                 String dateWithoutLeadingZero = m + "/" + d + "/" + y;
                 //dates will be set on the preferred format before printing
                 jobPostDatePreferredFormat = toPreferredDateFormat(dateWithoutLeadingZero);
-                try { //todo try to not use try catch
+                try {
                     Date tDate = simpleDateFormat.parse(dateWithoutLeadingZero); //converts into "MM/dd/yyyy" format first. maintains the leading zeroes
                     jobPostDateString = simpleDateFormat.format(tDate);
                 } catch (ParseException e) {
@@ -541,7 +541,7 @@ public abstract class AddEntryActivity extends AppCompatActivity {
             deadlineDateString = cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_DEADLINE));
             if (deadlineDateString != null) {
                 Log.d(TAG, "fillExistingData: has deadline ****************///////////deadlineDateString=" + deadlineDateString);
-                deadlineDateTextView.setText(toPreferredDateFormat(deadlineDateString)); //todo fixxxxxxxxx
+                deadlineDateTextView.setText(toPreferredDateFormat(deadlineDateString));
             } else {
                 Log.d(TAG, "fillExistingData: no deadlineDateString***** = " + deadlineDateString);
                 deadlineDateTextView.setText(R.string.noDeadline);

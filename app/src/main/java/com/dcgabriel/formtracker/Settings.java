@@ -21,6 +21,7 @@ public class Settings extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         dateFormatSpinner = findViewById(R.id.dateFormatSpinner);
         ArrayAdapter<String> dateFormatAdapter = new ArrayAdapter<>(Settings.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.dateFormatList));
@@ -68,5 +69,4 @@ public class Settings extends AppCompatActivity {
         else
             dateFormatSpinner.setSelection(1);
     }
-
 }

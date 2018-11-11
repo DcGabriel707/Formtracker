@@ -1,6 +1,7 @@
 package com.dcgabriel.formtracker;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         setupViewPager();
         onTabChange();
+        initializePreferences();
 
         addFab = (FloatingActionButton) findViewById(R.id.mainAddFab);
         addFab.setOnClickListener(new View.OnClickListener() {
@@ -84,6 +86,13 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult:************");
+        super.onActivityResult(requestCode, resultCode, data);
+        // currentFragment.onActivityResult(requestCode, resultCode, data); //todo works but find better alternative. works only on scholarship fragment
+        Toast.makeText(this, "onActivityResult from MainActivity", Toast.LENGTH_SHORT).show();
+    }
     private void showMoreMenu() {
         PopupMenu dropDownMenu = new PopupMenu(MainActivity.this, findViewById(R.id.action_more));
         dropDownMenu.getMenuInflater().inflate(R.menu.more_menu, dropDownMenu.getMenu());
@@ -220,12 +229,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "onActivityResult:************");
-        super.onActivityResult(requestCode, resultCode, data);
-        // currentFragment.onActivityResult(requestCode, resultCode, data); //todo works but find better alternative. works only on scholarship fragment
-        Toast.makeText(this, "onActivityResult from MainActivity", Toast.LENGTH_SHORT).show();
+    private void initializePreferences() {
+
+        //initializes date format to MM/dd/yyyy when the app is opened the very first time
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
+        Toast.makeText(this, "dateFormat = " + sharedPreferences.getString("DateFormat", "N/A"), Toast.LENGTH_SHORT).show();
+        if (sharedPreferences.getString("DateFormat", "N/A") == null || sharedPreferences.getString("DateFormat", "N/A").equals("N/A")) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("DateFormat", getString(R.string.MMddyyyy));
+            editor.apply();
+        }
     }
 
     //
@@ -245,4 +258,6 @@ public class MainActivity extends AppCompatActivity {
 
 //todo make multiple fragment for landscape mode
 //todo add notification
-// todo change all icons to rounded icons
+//todo create image for empty view
+// change font
+// fix splascreen image

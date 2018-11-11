@@ -102,28 +102,29 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 Date date;
                 Calendar cal = Calendar.getInstance();
 
-
-                try {
-                    date = simpleDateFormat.parse(formsList.get(position).getDeadline());
-                    cal.setTime(date);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    Toast.makeText(mContext, "ParceException catched", Toast.LENGTH_SHORT).show();
-                    System.exit(1);
-                }
-
                 Intent shareDate = new Intent(Intent.ACTION_INSERT);
                 shareDate.setData(CalendarContract.Events.CONTENT_URI);
                 shareDate.putExtra(CalendarContract.Events.TITLE, formsList.get(position).getName() + " application deadline");
                 shareDate.putExtra(CalendarContract.Events.DESCRIPTION, "TEST");
 
+
                 //if there is a deadline
-                if (!(formsList.get(position).getDeadline().isEmpty() || formsList.get(position).getDeadline() == null)) {
+                if (!(formsList.get(position).getDeadline() == null)) {
+                    try {
+                        date = simpleDateFormat.parse(formsList.get(position).getDeadline());
+                        cal.setTime(date);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        Toast.makeText(mContext, "ParceException catched", Toast.LENGTH_SHORT).show();
+                        System.exit(1);
+                    }
                     shareDate.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, cal.getTimeInMillis());
                     shareDate.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, cal.getTimeInMillis());
                     shareDate.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true);
+                    mContext.startActivity(shareDate);
+                } else {
+                    Toast.makeText(mContext, mContext.getString(R.string.noDeadline), Toast.LENGTH_SHORT).show();
                 }
-                mContext.startActivity(shareDate);
             }
         });
     }
