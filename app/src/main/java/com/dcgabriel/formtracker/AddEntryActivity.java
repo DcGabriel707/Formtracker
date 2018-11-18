@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
@@ -76,17 +77,14 @@ public abstract class AddEntryActivity extends AppCompatActivity {
     private String myDateFormat;
 
     protected abstract int getLayoutId();
-
     protected abstract void initializeFromChildActivity();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
-
         initializeFromChildActivity();
         handleFindViewByIds();
-
 
         //handles the status spinner. string arrays found in strings.xml
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(childContext, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.statusList));
@@ -121,7 +119,6 @@ public abstract class AddEntryActivity extends AppCompatActivity {
         if (currentUri != null) {
             //fills the empty fields with existing data
             fillExistingData();
-
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -161,6 +158,10 @@ public abstract class AddEntryActivity extends AppCompatActivity {
         if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_EMPLOYMENT)) {
             setJobPostDate();
         }
+
+        //removes autofocus of edittext on activity startup
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
 
     }
 
@@ -336,7 +337,7 @@ public abstract class AddEntryActivity extends AppCompatActivity {
 
     //checks if column value is empty, else, adds it into the message to be shared
     private String addText(String message, String title, String value) {
-        if (value.equals("") || value == null) {
+        if (value == null || value.equals("")) {
             return message;
         } else {
             return message.concat("\n" + title + ": " + value);

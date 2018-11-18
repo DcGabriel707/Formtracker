@@ -1,5 +1,7 @@
 package com.dcgabriel.formtracker;
 
+import android.view.Window;
+
 import com.dcgabriel.formtracker.data.FormsContract.FormEntryTable;
 
 public class add_entry_college extends AddEntryActivity {
@@ -15,6 +17,10 @@ public class add_entry_college extends AddEntryActivity {
     protected void initializeFromChildActivity() {
         childContext = add_entry_college.this;
         formType = FormEntryTable.FORM_TYPE_COLLEGE;
+
+        //changes the status bar color instead of the Primary Color
+        Window window = add_entry_college.this.getWindow();
+        window.setStatusBarColor(getResources().getColor(R.color.collegeColor));
     }
 
 

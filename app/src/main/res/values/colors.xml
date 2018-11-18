@@ -6,9 +6,10 @@
     <color name="secondaryTextColor">#ffffffff</color>
     <color name="white">#ffffff</color>
     <color name="colorTeal">#00BFA5</color>
-    <color name="scholarshipColor">#43A047</color>
+    <color name="scholarshipColor">#388e3c</color>
     <color name="collegeColor">#FF5722</color>
     <color name="employmentColor">#8E24AA</color>
     <color name="othersColor">#00796B</color>
+    <color name="fabColor">#ffffff</color>
 
 </resources>

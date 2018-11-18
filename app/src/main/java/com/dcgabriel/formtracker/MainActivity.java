@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,12 +19,9 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     private final String TAG = "MainActivity";
-    private final int ADD_ITEM_REQUEST = 1; //used for startActivityForResult
-    private final int UPDATE_ITEM_REQUEST = 2; //test
     private SectionsPagerAdapter sectionsPagerAdapter;
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private Fragment currentFragment;
     private FloatingActionButton addFab;
     private SectionsPagerAdapter tabAdapter;
     private ManageFragmentFromActivity callBack; //uses the interface to apply button actions to the fragments
@@ -90,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "onActivityResult:************");
         super.onActivityResult(requestCode, resultCode, data);
-        // currentFragment.onActivityResult(requestCode, resultCode, data); //todo works but find better alternative. works only on scholarship fragment
         Toast.makeText(this, "onActivityResult from MainActivity", Toast.LENGTH_SHORT).show();
     }
     private void showMoreMenu() {
@@ -184,31 +179,24 @@ public class MainActivity extends AppCompatActivity {
                         toolbar.setTitle(R.string.scholarship);
                         toolbar.setBackgroundColor(getResources().getColor(R.color.scholarshipColor)); //temp find better way to change primary color
                         window.setStatusBarColor(getResources().getColor(R.color.scholarshipColor));
-                        addFab.setBackgroundColor(getResources().getColor(R.color.scholarshipColor));
                         tabLayout.setBackgroundColor(getResources().getColor(R.color.scholarshipColor));
                         break;
                     case 1:
                         toolbar.setBackgroundColor(getResources().getColor(R.color.collegeColor)); //temp find better way to change primary color
                         window.setStatusBarColor(getResources().getColor(R.color.collegeColor));
-                        addFab.setBackgroundColor(getResources().getColor(R.color.collegeColor));
                         tabLayout.setBackgroundColor(getResources().getColor(R.color.collegeColor));
-                        setTheme(R.style.CollegeTheme);
                         toolbar.setTitle(R.string.college);
                         break;
                     case 2:
                         toolbar.setBackgroundColor(getResources().getColor(R.color.employmentColor)); //temp find better way to change primary color
                         window.setStatusBarColor(getResources().getColor(R.color.employmentColor));
-                        addFab.setBackgroundColor(getResources().getColor(R.color.employmentColor));
                         tabLayout.setBackgroundColor(getResources().getColor(R.color.employmentColor));
-                        setTheme(R.style.EmploymentTheme);
                         toolbar.setTitle(R.string.employment);
                         break;
                     case 3:
                         toolbar.setBackgroundColor(getResources().getColor(R.color.othersColor)); //temp find better way to change primary color
                         window.setStatusBarColor(getResources().getColor(R.color.othersColor));
-                        addFab.setBackgroundColor(getResources().getColor(R.color.othersColor));
                         tabLayout.setBackgroundColor(getResources().getColor(R.color.othersColor));
-                        setTheme(R.style.OthersTheme);
                         toolbar.setTitle(R.string.others);
                         break;
                     default:
@@ -259,5 +247,4 @@ public class MainActivity extends AppCompatActivity {
 //todo make multiple fragment for landscape mode
 //todo add notification
 //todo create image for empty view
-// change font
-// fix splascreen image
+//todo fix splascreen image

@@ -33,6 +33,7 @@
 
                 <LinearLayout
                     style="@style/innerLinearLayoutAddEntry"
+                    android:focusable="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -97,8 +98,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center|bottom"
         android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="@color/white"
-        app:srcCompat="@drawable/ic_done_grey_24dp" />
+        app:backgroundTint="@color/scholarshipColor"
+        app:srcCompat="@drawable/ic_check_black_24dp" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/shareButton"
