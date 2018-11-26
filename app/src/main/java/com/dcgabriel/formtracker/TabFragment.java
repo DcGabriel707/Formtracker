@@ -67,13 +67,11 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
 
         final int ACTION_UPDATED = 1;
         final int ACTION_DELETED = 2;
-        Toast.makeText(childContext, "onActivityResult from " + formType, Toast.LENGTH_SHORT).show();
         if (resultCode == Activity.RESULT_OK) {
             updateLists();
             switch (requestCode) {
                 case ADD_ITEM_REQUEST: //when the addFab was clicked
                     adapter.notifyItemInserted(adapter.getItemCount());
-                    Toast.makeText(childContext, "onActivityResult Received. Entry inserted", Toast.LENGTH_SHORT).show();
                     break;
                 case UPDATE_ITEM_REQUEST: //when a specific CardView entry is clicked from the recyclerview
                     int pos = data.getIntExtra("position", -1); // gets the position of the entry being updated/deleted
@@ -82,16 +80,13 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
                         formsArrayList.clear();
                         addEntriesIntoList();
                         adapter.notifyItemChanged(pos);
-                        Toast.makeText(childContext, "onActivityResult Received. Entry updated. Position = " + pos, Toast.LENGTH_SHORT).show();
                     } else if (action == ACTION_DELETED) {
                         adapter.notifyItemRemoved(pos);
-                        Toast.makeText(childContext, "onActivityResult Received. Entry deleted. Position = " + pos, Toast.LENGTH_SHORT).show();
                     } else
                         adapter.notifyDataSetChanged();
                     break;
                 default:
                     adapter.notifyDataSetChanged();
-                    Toast.makeText(childContext, "onActivityResult Received. All entries updated. notifyDataSetChanged called", Toast.LENGTH_SHORT).show();
                     break;
             }
             setEmptyView();

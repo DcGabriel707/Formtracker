@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.scholarship); //sets the title to the default tab title
+        toolbar.setTitleTextAppearance(this, R.style.tajawalTextAppearance);
         setSupportActionBar(toolbar);
         setupViewPager();
         onTabChange();
@@ -58,14 +59,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(TAG, "onOptionsItemSelected: ************");
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         switch (id) {
             case (R.id.action_more):
-                Toast.makeText(MainActivity.this, "Settings", Toast.LENGTH_SHORT).show();
                 showMoreMenu();
                 break;
             case (R.id.action_refresh):
@@ -74,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case (R.id.action_sort):
                 Log.d(TAG, "onOptionsItemSelected: sort");
-                Toast.makeText(MainActivity.this, "Sorting", Toast.LENGTH_SHORT).show();
                 showSortMenu();
                 break;
         }
@@ -86,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "onActivityResult:************");
         super.onActivityResult(requestCode, resultCode, data);
-        Toast.makeText(this, "onActivityResult from MainActivity", Toast.LENGTH_SHORT).show();
     }
     private void showMoreMenu() {
         PopupMenu dropDownMenu = new PopupMenu(MainActivity.this, findViewById(R.id.action_more));
@@ -118,23 +113,15 @@ public class MainActivity extends AppCompatActivity {
         dropDownSort.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                MenuItem subMenuItem;
                 switch (item.getItemId()) {
                     case (R.id.sort_creation):
-                        //  subMenuItem = item.getSubMenu().getItem(0);
-                        //  subMenuItem.setChecked(!subMenuItem.isChecked());
                         callBack.sortButton(ManageFragmentFromActivity.SORT_CREATION);
-                        Toast.makeText(MainActivity.this, "Sorting Creation", Toast.LENGTH_SHORT).show();
                         return true;
                     case (R.id.sort_name):
                         callBack.sortButton(ManageFragmentFromActivity.SORT_NAME);
-                        //  subMenuItem = item.getSubMenu().getItem(1);
-                        //  subMenuItem.setChecked(!subMenuItem.isChecked());
                         return true;
                     case (R.id.sort_deadline):
                         callBack.sortButton(ManageFragmentFromActivity.SORT_DEADLINE);
-                        //  subMenuItem = item.getSubMenu().getItem(2);
-                        //  subMenuItem.setChecked(!subMenuItem.isChecked());
                         return true;
                 }
                 return false;
@@ -221,7 +208,6 @@ public class MainActivity extends AppCompatActivity {
 
         //initializes date format to MM/dd/yyyy when the app is opened the very first time
         SharedPreferences sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
-        Toast.makeText(this, "dateFormat = " + sharedPreferences.getString("DateFormat", "N/A"), Toast.LENGTH_SHORT).show();
         if (sharedPreferences.getString("DateFormat", "N/A") == null || sharedPreferences.getString("DateFormat", "N/A").equals("N/A")) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("DateFormat", getString(R.string.MMddyyyy));
@@ -248,3 +234,5 @@ public class MainActivity extends AppCompatActivity {
 //todo add notification
 //todo create image for empty view
 //todo fix splascreen image
+//todo add feature to open website when clicked, when no website is placed, search for the name and company in browser. use launch icon or open in browser icon
+//todo save sorting preference

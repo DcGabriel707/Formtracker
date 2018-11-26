@@ -7,8 +7,6 @@ import android.util.Log;
 
 import com.dcgabriel.formtracker.data.FormsContract.FormEntryTable;
 
-//*****************
-
 public class FormsDBHelper extends SQLiteOpenHelper {
     private final String TAG = "FormsDBHelper";
 

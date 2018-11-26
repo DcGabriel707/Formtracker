@@ -56,6 +56,12 @@
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
+    <!--for toolbars only-->
+    <style name="tajawalTextAppearance">
+        <item name="android:fontFamily">@font/tajawal_regular</item>
+
+    </style>
+
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:background">@drawable/round_corner_rectangle</item>
         <item name="android:colorBackground">@android:color/transparent</item>

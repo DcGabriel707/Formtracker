@@ -10,8 +10,10 @@ import android.view.View;
 import android.widget.Toast;
 
 public class AboutPage extends AppCompatActivity {
+    int count = 0;
 
     CardView sendFeedbackCardView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,5 +36,26 @@ public class AboutPage extends AppCompatActivity {
         });
     }
 
+    public void moreApps(View view) {
+        Intent intent = getPackageManager().getLaunchIntentForPackage("com.android.vending");
+        if (intent != null) {
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("https://play.google.com/store/apps/developer?id=Gabriel+Carmen"));
+            startActivity(intent);
+        }
+    }
+
+    public void nothingUnusual(View view) {
+        count++;
+        if (count == 10) {
+            Toast.makeText(this, "10", Toast.LENGTH_SHORT).show();
+        }
+        if (count == 20) {
+            Toast.makeText(this, "Hooray! You have found it. Now, send a feedback and tell us", Toast.LENGTH_SHORT).show();
+        }
+        if (count == 30) {
+            Toast.makeText(this, "created by Gabriel Carmen", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }

@@ -51,30 +51,16 @@ public class FormsProvider extends ContentProvider {
 
         Cursor cursor;
 
-        // Figure out if the URI matcher can match the URI to a specific code
         int match = sUriMatcher.match(uri);
         switch (match) {
             case FORMS:
-                // For the PETS code, query the pets table directly with the given
-                // projection, selection, selection arguments, and sort order. The cursor
-                // could contain multiple rows of the pets table.
+                //cursor can include multiple rows
                 cursor = database.query(FormEntryTable.TABLE_NAME, projection, selection, selectionArgs, null, null,
-                        sortOrder); //todo burrowed code
+                        sortOrder);
                 break;
             case FORM_ID:
-                // For the PET_ID code, extract out the ID from the URI.
-                // For an example URI such as "content://com.example.android.pets/pets/3",
-                // the selection will be "_id=?" and the selection argument will be a
-                // String array containing the actual ID of 3 in this case.
-                //
-                // For every "?" in the selection, we need to have an element in the selection
-                // arguments that will fill in the "?". Since we have 1 question mark in the
-                // selection, we have 1 String in the selection arguments' String array.
                 selection = FormEntryTable._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-
-                // This will perform a query on the pets table where the _id equals 3 to return a
-                // Cursor containing that row of the table.
                 cursor = database.query(FormEntryTable.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
                 break;
@@ -102,14 +88,12 @@ public class FormsProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues contentValues) {
-        Cursor cursor;
 
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case FORMS:
                 SQLiteDatabase database = formsDBHelper.getWritableDatabase();
                 long id = database.insert(FormEntryTable.TABLE_NAME, null, contentValues);
-                // BURROWED CODE REMOVE LATER If the ID is -1, then the insertion failed. Log an error and return null.
                 if (id == -1) {
                     Log.e(TAG, "Failed to insert row for " + uri);
                     return null;

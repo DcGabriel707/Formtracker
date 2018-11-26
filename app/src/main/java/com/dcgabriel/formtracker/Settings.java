@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 public class Settings extends AppCompatActivity {
 
@@ -37,7 +36,7 @@ public class Settings extends AppCompatActivity {
                 } else if (position == 1) { //if dd/mm/yyyy is selected
                     dateFormat = getString(R.string.ddMMyyyy);
                     saveSharedPreference();
-                    loadSharedPreference(); //dddddddddddddddddddddddddddddddddddddddfor debugging
+                    loadSharedPreference(); //for debugging
                 }
             }
 
@@ -55,14 +54,11 @@ public class Settings extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("DateFormat", dateFormat);
         editor.apply();
-        Toast.makeText(this, "sharedPreference saved", Toast.LENGTH_SHORT).show();
     }
 
     private void loadSharedPreference() {
         SharedPreferences sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
         String loadedDateFormat = sharedPreferences.getString("DateFormat", "N/A");
-
-        Toast.makeText(this, loadedDateFormat, Toast.LENGTH_SHORT).show();
 
         if (loadedDateFormat.equals(getString(R.string.MMddyyyy)))
             dateFormatSpinner.setSelection(0);

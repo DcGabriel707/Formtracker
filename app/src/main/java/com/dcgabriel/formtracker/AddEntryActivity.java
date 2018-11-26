@@ -311,7 +311,7 @@ public abstract class AddEntryActivity extends AppCompatActivity {
             if (rowsDeleted == 0) {
                 Toast.makeText(childContext, "Delete Failed", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(childContext, "Delete Successful", Toast.LENGTH_SHORT).show();
+                Toast.makeText(childContext, "Deleted", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -412,13 +412,11 @@ public abstract class AddEntryActivity extends AppCompatActivity {
 
     //turn remove dates into a single method
     public void removeDeadline(View view) {
-        Toast.makeText(childContext, "Remove Deadline", Toast.LENGTH_SHORT).show();
         deadlineDateString = null;
         deadlineDateTextView.setText(R.string.choose_date);
     }
 
     public void removeDateSubmitted(View view) {
-        Toast.makeText(childContext, "Remove Deadline", Toast.LENGTH_SHORT).show();
         dateSubmittedString = null;
         dateSubmittedTextView.setText(R.string.choose_date);
     }
@@ -467,7 +465,6 @@ public abstract class AddEntryActivity extends AppCompatActivity {
                     Toast.makeText(childContext, "ParceException catched", Toast.LENGTH_SHORT).show();
                     System.exit(1);
                 }
-                Toast.makeText(childContext, dateSubmittedString, Toast.LENGTH_SHORT).show();
                 dateSubmittedTextView.setText(dateSubmissionPreferredFormat);
             }
         };
@@ -494,7 +491,6 @@ public abstract class AddEntryActivity extends AppCompatActivity {
                     Toast.makeText(childContext, "ParceException catched", Toast.LENGTH_SHORT).show();
                     System.exit(1);
                 }
-                Toast.makeText(childContext, jobPostDateString, Toast.LENGTH_SHORT).show();
                 jobPostDateTextView.setText(jobPostDatePreferredFormat);
             }
         };

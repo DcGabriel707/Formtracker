@@ -12,7 +12,6 @@ public final class FormsContract {
     public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_FORMS);
 
 
-    //make a  universal table??
     public static final class FormEntryTable implements BaseColumns {
 
         public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_FORMS);

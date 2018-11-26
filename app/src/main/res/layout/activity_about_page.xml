@@ -27,6 +27,8 @@
         android:orientation="vertical">
 
         <android.support.v7.widget.CardView
+
+            android:stateListAnimator="@animator/button_elevate"
             style="@style/addEntryCardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -54,9 +56,13 @@
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
+
+            android:layout_height="wrap_content"
             style="@style/addEntryCardView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:foreground="?attr/selectableItemBackground"
+            android:onClick="nothingUnusual"
+            android:stateListAnimator="@animator/button_elevate">
 
             <LinearLayout
                 style="@style/innerLinearLayoutAddEntry"
@@ -66,12 +72,35 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:text="Created by Gabriel Carmen" />
+                    android:text="Created by Gabriel Carmen"
+                    android:textAlignment="center" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
+            style="@style/addEntryCardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:foreground="?attr/selectableItemBackground"
+            android:onClick="moreApps"
+            android:stateListAnimator="@animator/button_elevate">
+
+            <LinearLayout
+                style="@style/innerLinearLayoutAddEntry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="More Apps"
+                    android:textAlignment="center" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+
+            android:stateListAnimator="@animator/button_elevate"
             android:id="@+id/sendFeedbackCardView"
             style="@style/addEntryCardView"
             android:layout_width="match_parent"
