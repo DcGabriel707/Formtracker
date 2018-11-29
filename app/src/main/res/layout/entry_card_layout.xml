@@ -29,6 +29,7 @@
             android:padding="12dp">
 
             <TextView
+                android:stateListAnimator="@animator/button_elevate"
                 android:id="@+id/entryCardNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -240,13 +240,41 @@
                 style="@style/addEntryTextView"
                 android:text="@string/website" />
 
-            <android.support.v7.widget.CardView style="@style/addEntryEditTextCard">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/websiteEditText"
-                    style="@style/addEntryEditText"
-                    android:inputType="textWebEditText" />
-            </android.support.v7.widget.CardView>
+                <android.support.v7.widget.CardView
+                    style="@style/addEntryEditTextCard"
+                    android:layout_weight="1">
+
+                    <EditText
+
+                        android:id="@+id/websiteEditText"
+                        style="@style/addEntryEditText"
+                        android:inputType="textWebEditText" />
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    style="@style/smallerCardViewInsideCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/launchButtonWidthHeight"
+                    android:layout_gravity="center"
+                    android:layout_weight="5"
+                    android:onClick="launchBrowser"
+                    android:stateListAnimator="@animator/button_elevate"
+                    app:cardCornerRadius="@dimen/launchButtonRadius">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_open_in_new_grey_24dp" />
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
+
 
             <TextView
                 style="@style/addEntryTextView"
@@ -257,7 +285,7 @@
                 <EditText
                     android:id="@+id/locationEditText"
                     style="@style/addEntryEditText"
-                    android:inputType="textPostalAddress" />
+                    android:inputType="textMultiLine" />
             </android.support.v7.widget.CardView>
 
             <TextView
@@ -283,7 +311,6 @@
                     style="@style/addEntryEditText"
                     android:inputType="phone" />
             </android.support.v7.widget.CardView>
-
 
         </LinearLayout>
     </android.support.v7.widget.CardView>

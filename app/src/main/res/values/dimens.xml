@@ -14,4 +14,6 @@
     <dimen name="entryDetailCardCornerRadius">16dp</dimen>
     <dimen name="tabLayoutHeight">50dp</dimen>
     <dimen name="elevationMenu">20dp</dimen>
+    <dimen name="launchButtonWidthHeight">40dp</dimen>
+    <dimen name="launchButtonRadius">20dp</dimen>
 </resources>

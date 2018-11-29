@@ -2,6 +2,7 @@ package com.dcgabriel.formtracker;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -77,6 +78,7 @@ public abstract class AddEntryActivity extends AppCompatActivity {
     private String myDateFormat;
 
     protected abstract int getLayoutId();
+
     protected abstract void initializeFromChildActivity();
 
     @Override
@@ -499,6 +501,19 @@ public abstract class AddEntryActivity extends AppCompatActivity {
         jobPostDateString = myCalendarDialog.getDateString();
 
     }
+
+    //opens the website. if there is no website, the application name is queried to a web search
+    public void launchBrowser(View view) {
+        String website = websiteEditText.getText().toString();
+        if (website == null || website.equals("")) {
+
+            website = nameEditText.getText().toString();
+        }
+        Intent launch = new Intent(Intent.ACTION_WEB_SEARCH);
+        launch.putExtra(SearchManager.QUERY, website);
+        startActivity(launch);
+    }
+
 
     //converts date string into preferred date format. Must only be used when displaying date strings not when modifying database.
     private String toPreferredDateFormat(String unformattedDateString) {

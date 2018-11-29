@@ -9,6 +9,9 @@ public class Forms {
     private String deadline;
     private String status;
     private Integer id;
+
+
+    private String website;
     private Uri uri; //to be passed into the recyclerViewAdapter where it will be passed to the editentry activity. so the activity can get the correct data to fill the edittexts
 
     public Forms() {
@@ -75,5 +78,12 @@ public class Forms {
         this.uri = uri;
     }
 
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
 
 }

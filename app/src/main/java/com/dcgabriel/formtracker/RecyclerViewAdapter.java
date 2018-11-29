@@ -1,5 +1,6 @@
 package com.dcgabriel.formtracker;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -90,6 +91,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             public void onClick(View view) {
                 Log.d(TAG, "onBindViewHolder: onClick: *******************");
                 entryListener.editEntry(position);
+            }
+        });
+
+        //todo fixx
+        holder.nameTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String website = formsList.get(position).getWebsite();
+                if (website == null || website.equals("")) {
+                    website = formsList.get(position).getName();
+                }
+                Intent launch = new Intent(Intent.ACTION_WEB_SEARCH);
+                launch.putExtra(SearchManager.QUERY, website);
+                mContext.startActivity(launch);
             }
         });
 

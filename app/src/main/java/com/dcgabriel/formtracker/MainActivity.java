@@ -123,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
                     case (R.id.sort_deadline):
                         callBack.sortButton(ManageFragmentFromActivity.SORT_DEADLINE);
                         return true;
+                    case (R.id.sort_status):
+                        callBack.sortButton(ManageFragmentFromActivity.SORT_STATUS);
                 }
                 return false;
             }
@@ -220,6 +222,7 @@ public class MainActivity extends AppCompatActivity {
         final int SORT_NAME = 1;
         final int SORT_DEADLINE = 2;
         final int SORT_CREATION = 3;
+        final int SORT_STATUS = 4;
 
         void addButton();
 
@@ -236,3 +239,4 @@ public class MainActivity extends AppCompatActivity {
 //todo fix splascreen image
 //todo add feature to open website when clicked, when no website is placed, search for the name and company in browser. use launch icon or open in browser icon
 //todo save sorting preference
+// add dashboard/ statistics of all the forms

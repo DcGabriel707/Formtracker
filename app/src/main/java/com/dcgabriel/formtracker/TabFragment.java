@@ -32,6 +32,7 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
     private RecyclerViewAdapter adapter;
     private final int ADD_ITEM_REQUEST = 1; //used for startActivityForResult
     private final int UPDATE_ITEM_REQUEST = 2; //test
+    private int currentSortType = MainActivity.ManageFragmentFromActivity.SORT_CREATION; //saves the current sort type
     protected Context childContext;
     protected String formType;
 
@@ -44,21 +45,12 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
         addEntriesIntoList();
         handleRecyclerView();
         setEmptyView();
+        sortButton(MainActivity.ManageFragmentFromActivity.SORT_CREATION); //sort by creation, by default
         return view;
     }
 
     protected abstract View getFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState);
 
-    protected void handleRecyclerView() {
-        Log.d(TAG, "handleRecyclerView: *********************************");
-        RecyclerView recyclerView;
-        System.out.println(childContext.toString());
-        recyclerView = view.findViewById(R.id.recyclerView);
-        adapter = new RecyclerViewAdapter(childContext, this, formsArrayList);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(childContext));
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -71,7 +63,8 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
             updateLists();
             switch (requestCode) {
                 case ADD_ITEM_REQUEST: //when the addFab was clicked
-                    adapter.notifyItemInserted(adapter.getItemCount());
+                    adapter.notifyItemInserted(adapter.getItemCount()); //add new item at the bottom of the list
+                    //adapter.notifyItemInserted(0); //add new item at the top of the list
                     break;
                 case UPDATE_ITEM_REQUEST: //when a specific CardView entry is clicked from the recyclerview
                     int pos = data.getIntExtra("position", -1); // gets the position of the entry being updated/deleted
@@ -93,19 +86,17 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
         }
     }
 
-    //check if list is empty and applies the empty view
-    private void setEmptyView() {
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
-        View emptyLayoutView = view.findViewById(R.id.emptyView);
-        if (formsArrayList.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            emptyLayoutView.setVisibility(View.VISIBLE);
-        } else {
-            recyclerView.setVisibility(View.VISIBLE);
-            emptyLayoutView.setVisibility(View.GONE);
-        }
-
+    protected void handleRecyclerView() {
+        Log.d(TAG, "handleRecyclerView: *********************************");
+        RecyclerView recyclerView;
+        System.out.println(childContext.toString());
+        recyclerView = view.findViewById(R.id.recyclerView);
+        adapter = new RecyclerViewAdapter(childContext, this, formsArrayList);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(childContext));
     }
+
 
     protected void addEntriesIntoList() {
         Log.d(TAG, "addEntriesIntoList: ************");
@@ -133,7 +124,7 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
 
         String[] projection = new String[]{FormsContract.FormEntryTable.COLUMN_NAME, companyOrLocation,
                 shortDetail, FormsContract.FormEntryTable.COLUMN_STATUS,
-                FormsContract.FormEntryTable.COLUMN_DEADLINE, FormsContract.FormEntryTable._ID};
+                FormsContract.FormEntryTable.COLUMN_DEADLINE, FormEntryTable.COLUMN_WEBSITE, FormsContract.FormEntryTable._ID};
         String selection = FormsContract.FormEntryTable.COLUMN_TYPE + "=?";
         String[] selectionArgs = {formType};
 
@@ -150,6 +141,7 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
                 formsArrayList.get(i).setDetails(cursor.getString(cursor.getColumnIndex(shortDetail)));
                 formsArrayList.get(i).setDeadline(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_DEADLINE)));
                 formsArrayList.get(i).setStatus(cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_STATUS)));
+                formsArrayList.get(i).setWebsite(cursor.getString(cursor.getColumnIndex(FormEntryTable.COLUMN_WEBSITE)));
                 formsArrayList.get(i).setId(cursor.getInt(cursor.getColumnIndex(FormsContract.FormEntryTable._ID)));
                 formsArrayList.get(i).setUri(ContentUris.withAppendedId(FormsContract.FormEntryTable.CONTENT_URI, cursor.getInt(cursor.getColumnIndex(FormsContract.FormEntryTable._ID))));
             }
@@ -160,12 +152,28 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
         }
     }
 
-    public void updateLists() {
-        formsArrayList.clear();
-        addEntriesIntoList();
-        // handleRecyclerView();
+
+    //check if list is empty and applies the empty view
+    private void setEmptyView() {
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        View emptyLayoutView = view.findViewById(R.id.emptyView);
+        if (formsArrayList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyLayoutView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyLayoutView.setVisibility(View.GONE);
+        }
+
     }
 
+    public void updateLists() {
+        formsArrayList.clear();
+        sortButton(currentSortType);
+        addEntriesIntoList();
+        // handleRecyclerView();
+        sortButton(currentSortType);
+    }
 
     //from ManageFragmentFromActivity interface
     @Override
@@ -210,7 +218,6 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
 
     }
 
-
     @Override
     public void refreshButton() {
         updateLists();
@@ -219,26 +226,27 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
 
     @Override
     public void sortButton(final int sortType) {
-        //sort by name
+
         Collections.sort(formsArrayList, new Comparator<Forms>() {
             @Override
             public int compare(Forms o1, Forms o2) {
                 Log.d(TAG, "compare: ***************");
                 if (sortType == MainActivity.ManageFragmentFromActivity.SORT_NAME) { //sort by name
                     Log.d(TAG, "compare: Name***********");
-
+                    currentSortType = MainActivity.ManageFragmentFromActivity.SORT_NAME;
                     return o1.getName().compareToIgnoreCase(o2.getName());
                 } else if (sortType == MainActivity.ManageFragmentFromActivity.SORT_DEADLINE) { //sort by deadline
                     Log.d(TAG, "compare: Deadline***********");
+                    currentSortType = MainActivity.ManageFragmentFromActivity.SORT_DEADLINE;
                     if (o1.getDeadline() == null && !(o2.getDeadline() == null)) {  //if deadline1 is empty and deadline2 is not
                         return 1;
                     } else if (o2.getDeadline() == null && !(o1.getDeadline() == null)) { //if deadline1 is empty and deadline2 is not
                         return -1;
-                    } else if (o1.getDeadline() == null && o2.getDeadline() == null) { // if both are empty
-
+                    } else if (o1.getDeadline() == null && o2.getDeadline() == null) { // if both are empty, sort by name
                         return o1.getName().compareToIgnoreCase(o2.getName());
-                    }//sort by alphabetical instead
-                    else {
+                    } else if (o1.getDeadline().equals(o2.getDeadline())) {
+                        return o1.getName().compareToIgnoreCase(o2.getName()); // if both deadlines are the same, sort by name
+                    } else {
                         try {
                             //year must be sorted first before month and day
                             return new SimpleDateFormat("dd/mm/yyyy").parse(o1.getDeadline()).compareTo(new SimpleDateFormat("dd/mm/yyyy").parse(o2.getDeadline()));
@@ -246,18 +254,25 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
                             e.printStackTrace();
                             Toast.makeText(childContext, "ParceException catched", Toast.LENGTH_SHORT).show();
                             return o1.getDeadline().compareTo(o2.getDeadline());
-
                         }
-
                     }
                 } else if (sortType == MainActivity.ManageFragmentFromActivity.SORT_CREATION) {//sort by date created
                     Log.d(TAG, "compare: Creation***********");
-                    return o1.getId().compareTo(o2.getId());
+                    currentSortType = MainActivity.ManageFragmentFromActivity.SORT_CREATION;
+                    return o2.getId().compareTo(o1.getId());
+                } else if (sortType == MainActivity.ManageFragmentFromActivity.SORT_STATUS) { //sort by status
+                    Log.d(TAG, "compare: Status***********");
+                    currentSortType = MainActivity.ManageFragmentFromActivity.SORT_STATUS;
+                    if (o1.getStatus().equals(o2.getStatus())) {
+                        return o1.getName().compareToIgnoreCase(o2.getName());
+                    } else {
+                        return o1.getStatus().compareTo(o2.getStatus());
+                    }
                 } else {
                     Log.d(TAG, "compare: Default***********");
-                    return o1.getId().compareTo(o2.getId());
+                    currentSortType = MainActivity.ManageFragmentFromActivity.SORT_CREATION;
+                    return o2.getId().compareTo(o1.getId());
                 }
-
             }
         });
 
@@ -265,3 +280,9 @@ public abstract class TabFragment extends Fragment implements RecyclerViewAdapte
     }
 
 }
+
+//todo fix refresh. refresh sorts the list by the default sort not by preferred sort
+
+//todo fix sort issue. add new items on top of list. scrolling all the way down causes list to sometimes mysteriously sort by default
+//todo fix sort. if entries have same deadline, they must be sort by name
+//todo add sort by status

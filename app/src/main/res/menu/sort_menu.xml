@@ -12,6 +12,8 @@
         <item
             android:id="@+id/sort_deadline"
             android:title="@string/deadline" />
-
+        <item
+            android:id="@+id/sort_status"
+            android:title="@string/status" />
     </group>
 </menu>
