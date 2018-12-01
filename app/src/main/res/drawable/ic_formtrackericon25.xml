@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="320dp"
+    android:height="320dp"
+    android:viewportWidth="1200"
+    android:viewportHeight="1200">
+    <path
+        android:name="Rounded Rectangle 6"
+        android:fillColor="#b2dfdb"
+        android:pathData="m541.2 400h293c33.1 0 59.9 24.6 59.9 55v4c0 30.4 -26.8 55 -59.9 55h-293c-33.1 0 -59.9 -24.6 -59.9 -55v-4c0 -30.4 26.8 -55 59.9 -55z" />
+    <path
+        android:name="Rounded Rectangle 6 copy"
+        android:fillColor="#b2dfdb"
+        android:pathData="m626.1 660h293c33.1 0 59.9 24.6 59.9 55v4c0 30.4 -26.8 55 -59.9 55h-293c-33.1 0 -59.9 -24.6 -59.9 -55v-4c0 -30.4 26.8 -55 59.9 -55z" />
+    <path
+        android:name="Rounded Rectangle 7"
+        android:fillColor="#aaa9a9"
+        android:pathData="m510.5 69h188c20.7 0 37.5 16.8 37.5 37.5v6c0 20.7 -16.8 37.5 -37.5 37.5h-188c-20.7 0 -37.5 -16.8 -37.5 -37.5v-6c0 -20.7 16.8 -37.5 37.5 -37.5z" />
+</vector>
