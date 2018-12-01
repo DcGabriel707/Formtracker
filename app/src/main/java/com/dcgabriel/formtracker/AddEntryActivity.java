@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -232,7 +233,9 @@ public abstract class AddEntryActivity extends AppCompatActivity {
             values.put(FormsContract.FormEntryTable.COLUMN_SCHOLARSHIP_AWARD, award);
             values.put(FormsContract.FormEntryTable.COLUMN_TYPE, FormsContract.FormEntryTable.FORM_TYPE_SCHOLARSHIP);
         } else if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_COLLEGE)) {
+            String company = "";
             String aveCost = aveCostEditText.getText().toString().trim();
+
             values.put(FormsContract.FormEntryTable.COLUMN_COLLEGE_AVE_COST, aveCost);
             values.put(FormsContract.FormEntryTable.COLUMN_TYPE, FormsContract.FormEntryTable.FORM_TYPE_COLLEGE);
         } else if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_EMPLOYMENT)) {
@@ -342,7 +345,7 @@ public abstract class AddEntryActivity extends AppCompatActivity {
         if (value == null || value.equals("")) {
             return message;
         } else {
-            return message.concat("\n" + title + ": " + value);
+            return message.concat("\n" + title + ":   " + value);
         }
     }
 
@@ -363,6 +366,11 @@ public abstract class AddEntryActivity extends AppCompatActivity {
         if (cursor != null && cursor.moveToFirst()) {
             shareText = addText(shareText, childContext.getString(R.string.name), cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_NAME)));
             shareText = addText(shareText, childContext.getString(R.string.company), cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_COMPANY)));
+            shareText = addText(shareText, childContext.getString(R.string.award_amount), cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_SCHOLARSHIP_AWARD)));
+            shareText = addText(shareText, childContext.getString(R.string.average_cost), cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_COLLEGE_AVE_COST)));
+            shareText = addText(shareText, childContext.getString(R.string.job_type), cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_JOB_TYPE)));
+            shareText = addText(shareText, childContext.getString(R.string.salary), cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_JOB_SALARY)));
+            shareText = addText(shareText, childContext.getString(R.string.job_post_date), cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_JOB_POST_DATE)));
             shareText = addText(shareText, childContext.getString(R.string.description), cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_DESCRIPTION)));
             shareText = addText(shareText, childContext.getString(R.string.requirements), cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_REQUIREMENTS)));
             shareText = addText(shareText, childContext.getString(R.string.deadline), cursor.getString(cursor.getColumnIndex(FormsContract.FormEntryTable.COLUMN_DEADLINE)));
@@ -383,7 +391,6 @@ public abstract class AddEntryActivity extends AppCompatActivity {
         Log.d(TAG, "handleStatusSpinner: **********************");
         final RelativeLayout dateSubmittedLayout = findViewById(R.id.dateSubmittedLayout);
         final LinearLayout outerLayout = findViewById(R.id.outerLayoutStatusDeadlineSubmitted);
-        Log.d(TAG, "handleStatusSpinner: wdfawfwf-**********************---------");
 
         statusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             boolean isRemoved = false;
@@ -499,19 +506,45 @@ public abstract class AddEntryActivity extends AppCompatActivity {
 
         MyCalendarDialog myCalendarDialog = new MyCalendarDialog(childContext, jobPostDateCardView, jobPostDateString, jobPostDateTextView, currentUri, jobPostDateListener, simpleDateFormat);
         jobPostDateString = myCalendarDialog.getDateString();
-
     }
 
     //opens the website. if there is no website, the application name is queried to a web search
     public void launchBrowser(View view) {
         String website = websiteEditText.getText().toString();
         if (website == null || website.equals("")) {
-
             website = nameEditText.getText().toString();
         }
         Intent launch = new Intent(Intent.ACTION_WEB_SEARCH);
         launch.putExtra(SearchManager.QUERY, website);
         startActivity(launch);
+    }
+
+    //send email
+    public void sendEmail(View view) {
+        Intent send = new Intent(Intent.ACTION_SENDTO);
+        send.setData(Uri.parse("mailto:"));
+        send.putExtra(Intent.EXTRA_EMAIL, new String[]{contactEmailEditText.getText().toString()});
+        send.putExtra(Intent.EXTRA_SUBJECT, nameEditText.getText().toString());
+        startActivity(send);
+    }
+
+    //add contact using the contacts app
+    public void addContact(View view) {
+        Intent contactIntent = new Intent(ContactsContract.Intents.Insert.ACTION);
+        contactIntent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
+        contactIntent.putExtra(ContactsContract.Intents.Insert.EMAIL, contactEmailEditText.getText().toString());
+        contactIntent.putExtra(ContactsContract.Intents.Insert.PHONE, contactNumberEditText.getText().toString());
+        contactIntent.putExtra(ContactsContract.Intents.Insert.POSTAL, locationEditText.getText().toString());
+        contactIntent.putExtra(ContactsContract.Intents.Insert.NOTES, nameEditText.getText().toString());
+
+        //temp fix. missing company causes college add entry to crash when add contact is clicked
+        if (formType.equals(FormsContract.FormEntryTable.FORM_TYPE_COLLEGE)) {
+            //do nothing
+        } else {
+            contactIntent.putExtra(ContactsContract.Intents.Insert.COMPANY, companyEditText.getText().toString());
+        }
+        startActivity(contactIntent);
+
     }
 
 

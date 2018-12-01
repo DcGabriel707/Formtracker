@@ -237,6 +237,7 @@ public class MainActivity extends AppCompatActivity {
 //todo add notification
 //todo create image for empty view
 //todo fix splascreen image
-//todo add feature to open website when clicked, when no website is placed, search for the name and company in browser. use launch icon or open in browser icon
 //todo save sorting preference
-// add dashboard/ statistics of all the forms
+// todo add dashboard/ statistics of all the forms
+//todo create app intro. shows features
+//todo when icon is change, the adaptive, legacy icons must be changed as well

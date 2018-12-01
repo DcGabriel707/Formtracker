@@ -53,6 +53,12 @@ public final class FormsContract {
         //exclusive to college tab
         public static final String COLUMN_COLLEGE_AVE_COST = "college_ave_cost";
 
+        //extra columns reserved for future updates
+        public static final String COLUMN_EXTRA_ONE = "extra1";
+        public static final String COLUMN_EXTRA_TWO = "extra2";
+        public static final String COLUMN_EXTRA_THREE = "extra3";
+        public static final String COLUMN_EXTRA_FOUR = "extra4";
+        public static final String COLUMN_EXTRA_FIVE = "extra5";
 
         //other values
         public static final String FORM_TYPE_SCHOLARSHIP = "Scholarship";

@@ -29,7 +29,7 @@ public class AboutPage extends AppCompatActivity {
                 Toast.makeText(AboutPage.this, "sending", Toast.LENGTH_SHORT).show();
                 Intent sendFeedback = new Intent(Intent.ACTION_SENDTO);
                 sendFeedback.setData(Uri.parse("mailto:"));
-                sendFeedback.putExtra(Intent.EXTRA_EMAIL, "gcarapplications@gmail.com");
+                sendFeedback.putExtra(Intent.EXTRA_EMAIL, new String[]{"gcarapplications@gmail.com"});
                 sendFeedback.putExtra(Intent.EXTRA_SUBJECT, "Axcept feedback");
                 startActivity(sendFeedback);
             }
@@ -56,6 +56,10 @@ public class AboutPage extends AppCompatActivity {
         if (count == 30) {
             Toast.makeText(this, "created by Gabriel Carmen", Toast.LENGTH_SHORT).show();
         }
+        if (count == 45) {
+            Toast.makeText(this, "You can stop now", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 }

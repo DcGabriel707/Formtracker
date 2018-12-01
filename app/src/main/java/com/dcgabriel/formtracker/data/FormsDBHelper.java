@@ -41,8 +41,16 @@ public class FormsDBHelper extends SQLiteOpenHelper {
                 + FormEntryTable.COLUMN_WEBSITE + " TEXT,"
                 + FormEntryTable.COLUMN_CONTACT_EMAIL + " TEXT,"
                 + FormEntryTable.COLUMN_CONTACT_NUMBER + " TEXT,"
-                + FormEntryTable.COLUMN_LOCATION + " TEXT"
+                + FormEntryTable.COLUMN_LOCATION + " TEXT,"
+
+                + FormEntryTable.COLUMN_EXTRA_ONE + " TEXT," // extra columns used for future updates
+                + FormEntryTable.COLUMN_EXTRA_TWO + " TEXT,"
+                + FormEntryTable.COLUMN_EXTRA_THREE + " TEXT,"
+                + FormEntryTable.COLUMN_EXTRA_FOUR + " TEXT,"
+                + FormEntryTable.COLUMN_EXTRA_FIVE + " TEXT"
                 + "); ";
+
+        //todo add extra columns
 
         db.execSQL(SQL_CREATE_FORMS_TABLE);
         Log.d(TAG, "onCreate: finished **************");

@@ -5,13 +5,12 @@
         android:drawable="@color/colorPrimaryDark"/>
 
     <item
-        android:width="200dp"
-        android:height="200dp"
+
         android:gravity="center">
-        <!--todo the method above only applies to api23+
-        width and height for item only works on api 23+
-        -->
-        <bitmap android:src="@drawable/form_tracker_icon25" />
+        <!--width and height for item only works on api 23+-->
+        <bitmap
+            android:gravity="center"
+            android:src="@mipmap/form_tracker_icon25" />
 
     </item>
 

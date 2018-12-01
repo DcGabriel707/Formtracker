@@ -20,106 +20,104 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <LinearLayout
-        style="@style/outerLinearLayoutAddEntry"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.CardView
-
-            android:stateListAnimator="@animator/button_elevate"
-            style="@style/addEntryCardView"
+        <LinearLayout
+            style="@style/outerLinearLayoutAddEntry"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <LinearLayout
-                style="@style/innerLinearLayoutAddEntry"
+            <android.support.v7.widget.CardView
+                style="@style/addEntryCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:foreground="?attr/selectableItemBackground"
+                android:onClick="nothingUnusual"
+                android:stateListAnimator="@animator/button_elevate">
 
-                <TextView
+                <LinearLayout
+                    style="@style/innerLinearLayoutAddEntry"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/app_name"
-                    android:textAlignment="center" />
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/ic_launcher" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/app_name"
+                        android:textAlignment="center" />
 
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Application Form Tracker"
-                    android:textAlignment="center" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Application Form Tracker"
+                        android:textAlignment="center" />
 
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="by Gabriel Carmen"
+                        android:textAlignment="center" />
 
-        <android.support.v7.widget.CardView
 
-            android:layout_height="wrap_content"
-            style="@style/addEntryCardView"
-            android:layout_width="match_parent"
-            android:foreground="?attr/selectableItemBackground"
-            android:onClick="nothingUnusual"
-            android:stateListAnimator="@animator/button_elevate">
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
 
-            <LinearLayout
-                style="@style/innerLinearLayoutAddEntry"
+            <android.support.v7.widget.CardView
+                style="@style/addEntryCardView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:foreground="?attr/selectableItemBackground"
+                android:onClick="moreApps"
 
-                <TextView
+                android:stateListAnimator="@animator/button_elevate">
+
+                <LinearLayout
+                    style="@style/innerLinearLayoutAddEntry"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Created by Gabriel Carmen"
-                    android:textAlignment="center" />
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
+                    android:layout_height="wrap_content">
 
-        <android.support.v7.widget.CardView
-            style="@style/addEntryCardView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:foreground="?attr/selectableItemBackground"
-            android:onClick="moreApps"
-            android:stateListAnimator="@animator/button_elevate">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="More apps"
+                        android:textAlignment="center" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
 
-            <LinearLayout
-                style="@style/innerLinearLayoutAddEntry"
+
+            <android.support.v7.widget.CardView
+
+                android:id="@+id/sendFeedbackCardView"
+                style="@style/addEntryCardView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:foreground="?attr/selectableItemBackground"
+                android:stateListAnimator="@animator/button_elevate">
 
-                <TextView
+                <LinearLayout
+                    android:id="@+id/sendFeedbackLinearLayout"
+                    style="@style/innerLinearLayoutAddEntry"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="More Apps"
-                    android:textAlignment="center" />
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
+                    android:layout_height="wrap_content">
 
-        <android.support.v7.widget.CardView
-
-            android:stateListAnimator="@animator/button_elevate"
-            android:id="@+id/sendFeedbackCardView"
-            style="@style/addEntryCardView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:foreground="?attr/selectableItemBackground">
-
-            <LinearLayout
-                android:id="@+id/sendFeedbackLinearLayout"
-                style="@style/innerLinearLayoutAddEntry"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Send Feedback"
-                    android:textAlignment="center" />
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
-    </LinearLayout>
-
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Have any issues? \nHave any suggestions? \nHave this app helped you? \n\nSend a feedback"
+                        android:textAlignment="center" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
 </android.support.design.widget.CoordinatorLayout>
